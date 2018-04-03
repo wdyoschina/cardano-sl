@@ -235,6 +235,7 @@ createMainBlockAndApply ::
        , HasLens' ctx (StateLockMetrics MemPoolModifyReason)
        , HasGeneratedSecrets
        , HasGenesisData
+       , HasGenesisHash
        , HasGenesisBlockVersionData
        , HasProtocolConstants
        , HasProtocolMagic
@@ -375,8 +376,9 @@ applyCreatedBlock ::
     , HasProtocolConstants
     , HasProtocolMagic
     , HasGeneratedSecrets
-    , HasGenesisData
     , HasGenesisBlockVersionData
+    , HasGenesisData
+    , HasGenesisHash
     )
     => ProxySKBlockInfo
     -> MainBlock
