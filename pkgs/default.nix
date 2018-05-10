@@ -5221,13 +5221,18 @@ inherit (pkgs.xorg) libXrender;};
          }) {};
       "beam-sqlite" = callPackage
         ({ mkDerivation, aeson, attoparsec, base, beam-core, beam-migrate
-         , bytestring, dlist, free, hashable, mtl, network-uri, scientific
-         , sqlite-simple, stdenv, text, time, unix
+         , bytestring, dlist, fetchgit, free, hashable, mtl, network-uri
+         , scientific, sqlite-simple, stdenv, text, time, unix
          }:
          mkDerivation {
            pname = "beam-sqlite";
-           version = "0.3.2.0";
-           sha256 = "3a65aaed83ab8bac030253bafcbcac2d1108c5e66f5272d1098261daa4d2951a";
+           version = "0.3.2.1";
+           src = fetchgit {
+             url = "https://github.com/input-output-hk/beam.git";
+             sha256 = "06a4sv0cm0m7rgvxs2pv7pvq5mgl9kknqqrxf8pdymgcfbr3f2r7";
+             rev = "7b55d464d2e80b4f1982f3458e5e4fac582fc806";
+           };
+           postUnpack = "sourceRoot+=/beam-sqlite; echo source root reset to $sourceRoot";
            libraryHaskellDepends = [
              aeson attoparsec base beam-core beam-migrate bytestring dlist free
              hashable mtl network-uri scientific sqlite-simple text time unix
