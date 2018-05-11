@@ -7897,7 +7897,7 @@ inherit (pkgs) mesa;};
              optparse-applicative QuickCheck reflection safe-exceptions safecopy
              serokell-util servant servant-client servant-client-core
              servant-server servant-swagger servant-swagger-ui sqlite-simple
-             sqlite-simple-errors stm string-conv swagger2 text text-format time
+             sqlite-simple-errors string-conv swagger2 text text-format time
              time-units transformers universum unliftio unliftio-core
              unordered-containers vector wai wai-cors warp
            ];

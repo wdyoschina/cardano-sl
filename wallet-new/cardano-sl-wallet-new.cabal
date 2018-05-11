@@ -159,7 +159,6 @@ library
                      , servant-swagger-ui
                      , sqlite-simple
                      , sqlite-simple-errors
-                     , stm
                      , string-conv
                      , swagger2
                      , text
@@ -236,7 +235,9 @@ executable cardano-node
                       UndecidableInstances
                       MonadFailDesugaring
 
-executable cardano-integration-test
+-- Cryptic executable name to mitigate $PATH limitation
+-- on Windows and AppVeyor.
+executable wal-integr-test
   hs-source-dirs:      integration
   main-is:             Main.hs
   ghc-options:         -threaded -rtsopts
@@ -372,10 +373,8 @@ test-suite wallet-unit-tests
                     , constraints
                     , containers
                     , data-default
-                    , directory
                     , formatting
                     , hspec
-                    , HUnit
                     , lens
                     , log-warper
                     , mtl
@@ -383,7 +382,6 @@ test-suite wallet-unit-tests
                     , quickcheck-instances
                     , safe-exceptions
                     , serokell-util
-                    , split
                     , text
                     , text-format
                     , universum
