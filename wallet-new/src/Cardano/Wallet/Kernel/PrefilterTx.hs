@@ -16,6 +16,8 @@ import qualified Data.Text.Buildable
 import           Formatting (bprint, (%))
 import           Serokell.Util (listJson, mapJson)
 
+import           Data.SafeCopy (base, deriveSafeCopy)
+
 import           Pos.Core (Address (..), HasConfiguration)
 import           Pos.Core.Txp (TxIn (..), TxOut (..), TxOutAux (..))
 import           Pos.Crypto (EncryptedSecretKey)
@@ -42,6 +44,8 @@ data PrefilteredBlock = PrefilteredBlock {
       -- | Relevant outputs
     , pfbOutputs :: Utxo
     }
+
+deriveSafeCopy 1 'base ''PrefilteredBlock
 
 prefilterBlock :: HasConfiguration
                => EncryptedSecretKey

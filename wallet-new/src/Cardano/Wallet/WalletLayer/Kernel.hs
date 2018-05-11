@@ -14,6 +14,7 @@ import           Pos.Block.Types (Blund, Undo (..))
 import           Pos.Core (HasConfiguration)
 
 import qualified Cardano.Wallet.Kernel as Kernel
+import qualified Cardano.Wallet.Kernel.DB.HdWallet as HD
 import           Cardano.Wallet.Kernel.DB.Resolved (ResolvedBlock)
 import           Cardano.Wallet.Kernel.Diffusion (WalletDiffusion (..))
 import           Cardano.Wallet.Kernel.Types (RawResolvedBlock (..), fromRawResolvedBlock)
@@ -51,11 +52,16 @@ bracketPassiveWallet logFunction f =
                                     "become",  "junk",     "kingdom", "flee" ]
                      }
             Right (esk, _) = safeKeysFromPhrase emptyPassphrase backup
-        Kernel.newWalletHdRnd w esk Map.empty
+        Kernel.createWalletHdRnd w walletName accountName (pk, esk) Map.empty
 
       f (passiveWalletLayer w invoke)
 
   where
+    pk = error "TODO obtain [AddressHash PublicKey] from safeKeysFromPhrase -> snd -> toPublicKey -> hash ..."
+    -- TODO proper defaults
+    walletName  = HD.WalletName "(new wallet)"
+    accountName = HD.AccountName "(new account)"
+
     -- | TODO(ks): Currently not implemented!
     passiveWalletLayer _wallet invoke =
         PassiveWalletLayer

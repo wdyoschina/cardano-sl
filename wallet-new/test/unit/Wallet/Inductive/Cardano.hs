@@ -18,10 +18,13 @@ import qualified Cardano.Wallet.Kernel as Kernel
 import           Cardano.Wallet.Kernel.Types
 import qualified Data.Text.Buildable
 import           Formatting (bprint, build, (%))
-import           Pos.Core (Coin, HasConfiguration, unsafeIntegerToCoin)
-import           Pos.Crypto (EncryptedSecretKey)
+
 import           Pos.Txp (Utxo, formatUtxo)
+import           Pos.Core (HasConfiguration, AddressHash)
+import           Pos.Crypto (EncryptedSecretKey, PublicKey)
 import           Pos.Util.Chrono
+
+import qualified Cardano.Wallet.Kernel.DB.HdWallet as HD
 
 import           Util
 import           Util.Validated
@@ -47,20 +50,20 @@ data EventCallbacks h m = EventCallbacks {
       -- The callback is given the translated UTxO of the bootstrap
       -- transaction (we cannot give it the translated transaction because
       -- we cannot translate the bootstrap transaction).
-      walletBootT       :: InductiveCtxt h -> Utxo -> m Kernel.WalletId
+      walletBootT       :: InductiveCtxt h -> Utxo -> m Kernel.AccountId
 
       -- | Apply a block
-    , walletApplyBlockT :: InductiveCtxt h -> Kernel.WalletId -> RawResolvedBlock -> m ()
+    , walletApplyBlockT :: InductiveCtxt h -> Kernel.AccountId -> RawResolvedBlock -> m ()
 
       -- | Insert new pending transaction
-    , walletNewPendingT :: InductiveCtxt h -> Kernel.WalletId -> RawResolvedTx -> m ()
+    , walletNewPendingT :: InductiveCtxt h -> Kernel.AccountId -> RawResolvedTx -> m ()
 
       -- | Rollback
       --
       -- TODO: Do we want to call 'switch' here? If so, we need some of the logic
       -- from the wallet worker thread to collapse multiple rollbacks and
       -- apply blocks into a single call to switch
-    , walletRollbackT   :: InductiveCtxt h -> Kernel.WalletId -> m ()
+    , walletRollbackT   :: InductiveCtxt h -> Kernel.AccountId -> m ()
     }
 
 -- | The context in which a function of 'EventCallbacks' gets called
@@ -94,15 +97,15 @@ interpretT mkWallet EventCallbacks{..} Inductive{..} =
           let history = NewestFirst []
           utxo' <- int (utxo w') -- translating UTxO does not change the state
           let ctxt = InductiveCtxt (toOldestFirst history) initCtxt w'
-          wid   <- liftTranslate $ walletBootT ctxt utxo'
-          goEvents wid history w' (getOldestFirst inductiveEvents)
+          accountId <- liftTranslate $ walletBootT ctxt utxo'
+          goEvents accountId history w' (getOldestFirst inductiveEvents)
 
-    goEvents :: Kernel.WalletId
+    goEvents :: Kernel.AccountId
              -> NewestFirst [] (WalletEvent h Addr)
              -> Wallet h Addr
              -> [WalletEvent h Addr]
              -> IntT h e m (Wallet h Addr)
-    goEvents wid = go
+    goEvents accountId = go
       where
         go :: NewestFirst [] (WalletEvent h Addr)
            -> Wallet h Addr
@@ -116,7 +119,7 @@ interpretT mkWallet EventCallbacks{..} Inductive{..} =
             b' <- int b
             ic <- get
             let ctxt = InductiveCtxt (toOldestFirst history') ic w'
-            liftTranslate $ walletApplyBlockT ctxt wid b'
+            liftTranslate $ walletApplyBlockT ctxt accountId b'
             go history' w' es
         go history w (NewPending t:es) = do
             let history'  = liftNewestFirst (NewPending t :) history
@@ -124,14 +127,14 @@ interpretT mkWallet EventCallbacks{..} Inductive{..} =
             t' <- int t
             ic <- get
             let ctxt = InductiveCtxt (toOldestFirst history') ic w'
-            liftTranslate $ walletNewPendingT ctxt wid t'
+            liftTranslate $ walletNewPendingT ctxt accountId t'
             go history' w' es
         go history w (Rollback:es) = do
             let history' = liftNewestFirst (Rollback :) history
                 w'       = rollback w
             ic <- get
             let ctxt = InductiveCtxt (toOldestFirst history') ic w'
-            liftTranslate $ walletRollbackT ctxt wid
+            liftTranslate $ walletRollbackT ctxt accountId
             go history' w' es
 
 {-------------------------------------------------------------------------------
@@ -140,57 +143,58 @@ interpretT mkWallet EventCallbacks{..} Inductive{..} =
 
 equivalentT :: forall h m. (HasConfiguration, Hash h Addr, MonadIO m)
             => Kernel.ActiveWallet
-            -> EncryptedSecretKey
+            -> (AddressHash PublicKey, EncryptedSecretKey)
             -> (DSL.Transaction h Addr -> Wallet h Addr)
             -> Inductive h Addr
             -> TranslateT IntException m (Validated (EquivalenceViolation h) ())
-equivalentT activeWallet esk = \mkWallet w ->
+equivalentT activeWallet (pk,esk) = \mkWallet w ->
       fmap (void . validatedFromEither)
-    $ catchSomeTranslateErrors
-    $ interpretT mkWallet EventCallbacks{..} w
+          $ catchSomeTranslateErrors
+          $ interpretT mkWallet EventCallbacks{..} w
   where
     passiveWallet = Kernel.walletPassive activeWallet
 
     walletBootT :: InductiveCtxt h
                 -> Utxo
-                -> TranslateT (EquivalenceViolation h) m Kernel.WalletId
+                -> TranslateT (EquivalenceViolation h) m Kernel.AccountId
     walletBootT ctxt utxo = do
-        wid <- liftIO $ Kernel.newWalletHdRnd passiveWallet esk utxo
-        checkWalletState ctxt wid
-        return wid
+
+        accountId <- liftIO $ Kernel.createWalletHdRnd passiveWallet walletName accountName (pk,esk) utxo
+        checkWalletState ctxt accountId
+        return accountId
+        where
+            walletName  = HD.WalletName "(test wallet)"
+            accountName = HD.AccountName "(test account)"
 
     walletApplyBlockT :: InductiveCtxt h
-                      -> Kernel.WalletId
+                      -> Kernel.AccountId
                       -> RawResolvedBlock
                       -> TranslateT (EquivalenceViolation h) m ()
-    walletApplyBlockT ctxt wid block = do
+    walletApplyBlockT ctxt accountId block = do
         liftIO $ Kernel.applyBlock passiveWallet (fromRawResolvedBlock block)
-        checkWalletState ctxt wid
+        checkWalletState ctxt accountId
 
     walletNewPendingT :: InductiveCtxt h
-                      -> Kernel.WalletId
+                      -> Kernel.AccountId
                       -> RawResolvedTx
                       -> TranslateT (EquivalenceViolation h) m ()
-    walletNewPendingT ctxt wid tx = do
-        _isValid <- liftIO $ Kernel.newPending activeWallet wid (rawResolvedTx tx)
-        checkWalletState ctxt wid
+    walletNewPendingT ctxt accountId tx = do
+        _ <- liftIO $ Kernel.newPending activeWallet accountId (rawResolvedTx tx)
+        checkWalletState ctxt accountId
 
     walletRollbackT :: InductiveCtxt h
-                    -> Kernel.WalletId
+                    -> Kernel.AccountId
                     -> TranslateT (EquivalenceViolation h) m ()
     walletRollbackT _ _ = error "walletRollbackT: TODO"
 
     checkWalletState :: InductiveCtxt h
-                     -> Kernel.WalletId
+                     -> Kernel.AccountId
                      -> TranslateT (EquivalenceViolation h) m ()
-    checkWalletState ctxt@InductiveCtxt{..} wid = do
-        cmp "utxo" utxo (`Kernel.getWalletUtxo` wid)
-        cmp "totalBalance" totalBalance getWalletTotalBalance
+    checkWalletState ctxt@InductiveCtxt{..} accountId = do
+        cmp "utxo" utxo (`Kernel.accountUtxo` accountId)
+        cmp "totalBalance" totalBalance (`Kernel.totalBalance` accountId)
         -- TODO: check other properties
       where
-        getWalletTotalBalance :: Kernel.PassiveWallet -> IO Coin
-        getWalletTotalBalance pw = unsafeIntegerToCoin <$> Kernel.totalBalance pw wid
-
         cmp :: ( Interpret h a
                , Eq (Interpreted a)
                , Buildable a
