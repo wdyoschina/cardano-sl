@@ -142,7 +142,6 @@ library
                      , neat-interpolation
                      , network-transport
                      , optparse-applicative
-                     , psqueues
                      , QuickCheck
                      , reflection
                      , safecopy
@@ -299,6 +298,7 @@ test-suite wallet-unit-tests
                       Test.Infrastructure.Genesis
                       Test.Spec.Kernel
                       Test.Spec.Models
+                      Test.Spec.Submission
                       Test.Spec.Translation
                       Test.Spec.WalletWorker
                       Util
