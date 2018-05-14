@@ -39,7 +39,6 @@ import           Pos.Wallet.Web.Tracking.Types (SyncQueue)
 import           Servant
 import           Data.Maybe (fromJust)
 import           Data.ByteString.Base58 (bitcoinAlphabet, decodeBase58)
-import           Test.QuickCheck (arbitrary, generate)
 
 -- | All the @Servant@ handlers for wallet-specific operations.
 handlers :: ( HasConfigurations
@@ -53,7 +52,6 @@ handlers = newWallet
     :<|> getWallet
     :<|> updateWallet
     :<|> newExternalWallet
-    :<|> newAddressPath
 
 
 -- | Pure function which returns whether or not the underlying node is
@@ -279,14 +277,3 @@ createNewExternalWallet walletMeta encodedExtPubKey = do
 
     makeWalletIdFrom publicKey =
         return $ encodeCType . Core.makePubKeyAddressBoot $ publicKey
-
--- | Creates a new BIP44 derivation path for an external wallet.
-newAddressPath
-    :: ( MonadThrow m
-       , V0.MonadBlockchainInfo m
-       , V0.MonadWalletLogic ctx m
-       )
-    => WalletId
-    -> m (WalletResponse AddressPath)
-newAddressPath _ =
-    single <$> (liftIO $ generate arbitrary)

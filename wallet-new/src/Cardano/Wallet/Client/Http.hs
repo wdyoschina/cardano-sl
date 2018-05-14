@@ -47,8 +47,6 @@ mkHttpClient baseUrl manager = WalletClient
         = \x -> run . updateWalletR x
     , postExternalWallet
         = run . postExternalWalletR
-    , postAddressPath
-        = run . postAddressPathR
     -- account endpoints
     , deleteAccount
         = \x -> unNoContent . run . deleteAccountR x
@@ -62,6 +60,8 @@ mkHttpClient baseUrl manager = WalletClient
         = \x y -> run . updateAccountR x y
     , postExternalAccount
         = \w -> run . postExternalAccountR w
+    , postAddressPath
+        = \x -> run . postAddressPathR x
     -- transactions endpoints
     , postTransaction
         = run . postTransactionR
@@ -105,7 +105,6 @@ mkHttpClient baseUrl manager = WalletClient
         :<|> getWalletR
         :<|> updateWalletR
         :<|> postExternalWalletR
-        :<|> postAddressPathR
         = walletsAPI
 
     deleteAccountR
@@ -114,6 +113,7 @@ mkHttpClient baseUrl manager = WalletClient
         :<|> postAccountR
         :<|> updateAccountR
         :<|> postExternalAccountR
+        :<|> postAddressPathR
         = accountsAPI
 
     postTransactionR

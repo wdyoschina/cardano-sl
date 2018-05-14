@@ -12,6 +12,7 @@ import           System.IO (hSetEncoding, stdout, utf8)
 import           Test.Hspec
 
 import           AddressSpecs (addressSpecs)
+import           AccountSpecs (accountSpecs)
 import           CLI
 import           Functions
 import           TransactionSpecs (transactionSpecs)
@@ -90,6 +91,7 @@ initialWalletState wc = do
 deterministicTests :: WalletRef -> WalletClient IO -> Spec
 deterministicTests wref wc = do
     addressSpecs wref wc
+    accountSpecs wref wc
     walletSpecs wref wc
     transactionSpecs wref wc
     QuickCheck.spec

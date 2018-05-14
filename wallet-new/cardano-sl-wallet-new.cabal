@@ -244,6 +244,7 @@ executable cardano-integration-test
                        Util
                        WalletSpecs
                        AddressSpecs
+                       AccountSpecs
                        TransactionSpecs
                        QuickCheckSpecs
 

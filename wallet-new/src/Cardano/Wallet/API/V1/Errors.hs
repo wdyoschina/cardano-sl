@@ -71,6 +71,7 @@ data WalletError =
     | TxRedemptionDepleted
     | TxSafeSignerNotFound { weAddress :: V1 Core.Address }
     | MissingRequiredParams { requiredParams :: NonEmpty (Text, Text) }
+    | CannotCreateAddress { weMsg :: !Text }
     | WalletIsNotReadyToProcessPayments { weStillRestoring :: SyncProgress }
     -- ^ The @Wallet@ where a @Payment@ is being originated is not fully
     -- synced (its 'WalletSyncState' indicates it's either syncing or
@@ -155,6 +156,7 @@ sample =
   , WalletAlreadyExists
   , AddressNotFound
   , MissingRequiredParams (("wallet_id", "walletId") :| [])
+  , CannotCreateAddress "Cannot create derivation path for new address in external wallet"
   , WalletIsNotReadyToProcessPayments sampleSyncProgress
   , NodeIsStillSyncing (mkSyncPercentage 42)
   ]
@@ -183,6 +185,8 @@ describe = \case
          "Reference to an unexisting address was given."
     MissingRequiredParams _ ->
          "Missing required parameters in the request payload."
+    CannotCreateAddress _ ->
+         "Cannot create derivation path for new address in external wallet."
     WalletIsNotReadyToProcessPayments _ ->
          "This wallet is restoring, and it cannot send new transactions until restoration completes."
     NodeIsStillSyncing _ ->
@@ -219,6 +223,8 @@ toServantError err =
             err404
         MissingRequiredParams{} ->
             err400
+        CannotCreateAddress{} ->
+            err403
         WalletIsNotReadyToProcessPayments{} ->
             err403
         NodeIsStillSyncing{} ->
