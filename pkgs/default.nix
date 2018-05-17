@@ -7859,24 +7859,26 @@ inherit (pkgs) mesa;};
          }) {};
       "cardano-sl-wallet-new" = callPackage
         ({ mkDerivation, acid-state, aeson, aeson-diff, aeson-pretty, async
-         , base, bytestring, cardano-sl, cardano-sl-block, cardano-sl-client
-         , cardano-sl-core, cardano-sl-crypto, cardano-sl-db
-         , cardano-sl-delegation, cardano-sl-infra, cardano-sl-networking
-         , cardano-sl-ssc, cardano-sl-txp, cardano-sl-update
-         , cardano-sl-util, cardano-sl-util-test, cardano-sl-wallet, cassava
-         , conduit, connection, constraints, containers, cryptonite
-         , data-default, directory, exceptions, formatting, gauge
-         , generics-sop, hspec, http-api-data, http-client, http-client-tls
-         , http-types, ixset-typed, json-sop, lens, log-warper, memory, mtl
+         , base, beam-core, beam-migrate, beam-sqlite, bytestring
+         , cardano-sl, cardano-sl-block, cardano-sl-client, cardano-sl-core
+         , cardano-sl-crypto, cardano-sl-db, cardano-sl-delegation
+         , cardano-sl-infra, cardano-sl-networking, cardano-sl-ssc
+         , cardano-sl-txp, cardano-sl-update, cardano-sl-util
+         , cardano-sl-util-test, cardano-sl-wallet, cassava, conduit
+         , connection, constraints, containers, cryptonite, data-default
+         , directory, exceptions, formatting, gauge, generics-sop, hspec
+         , http-api-data, http-client, http-client-tls, http-types
+         , ixset-typed, json-sop, lens, log-warper, memory, mtl
          , neat-interpolation, network-transport, node-ipc
          , optparse-applicative, pretty-show, QuickCheck
          , quickcheck-instances, random, reflection, safe-exceptions
          , safecopy, serokell-util, servant, servant-client
          , servant-client-core, servant-quickcheck, servant-server
-         , servant-swagger, servant-swagger-ui, stdenv, stm, string-conv
-         , swagger2, text, text-format, time, time-units, tls, transformers
-         , universum, unliftio, unliftio-core, unordered-containers, vector
-         , wai, wai-cors, warp, yaml
+         , servant-swagger, servant-swagger-ui, sqlite-simple
+         , sqlite-simple-errors, stdenv, stm, string-conv, swagger2, text
+         , text-format, time, time-units, tls, transformers, universum
+         , unliftio, unliftio-core, unordered-containers, vector, wai
+         , wai-cors, warp, yaml
          }:
          mkDerivation {
            pname = "cardano-sl-wallet-new";
