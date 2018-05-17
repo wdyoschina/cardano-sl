@@ -20,7 +20,7 @@ import qualified System.Metrics.Gauge as Metrics
 import qualified Test.QuickCheck as QC
 
 import           Pos.Arbitrary.Ssc ()
-import           Pos.Binary.Class (AsBinary, Bi, asBinary, fromBinary)
+import           Pos.Binary.Class (AsBinary, asBinary, fromBinary)
 import           Pos.Binary.Infra ()
 import           Pos.Binary.Ssc ()
 import           Pos.Core (EpochIndex, HasGenesisBlockVersionData, HasGenesisData,
@@ -45,7 +45,7 @@ import           Pos.Slotting (defaultOnNewSlotParams, getCurrentSlot, getSlotSt
 import           Pos.Ssc.Base (genCommitmentAndOpening, isCommitmentIdx, isOpeningIdx, isSharesIdx,
                                mkSignedCommitment)
 import           Pos.Ssc.Behavior (SscBehavior (..), SscOpeningParams (..), SscSharesParams (..))
-import           Pos.Ssc.Configuration (HasSscConfiguration, mpcSendInterval)
+import           Pos.Ssc.Configuration (mpcSendInterval)
 import           Pos.Ssc.Functions (hasCommitment, hasOpening, hasShares, vssThreshold)
 import           Pos.Ssc.Logic (sscGarbageCollectLocalData, sscProcessCertificate,
                                 sscProcessCommitment, sscProcessOpening, sscProcessShares)
@@ -298,7 +298,6 @@ sscProcessOurMessage action =
 
 sendOurData ::
     ( SscMode ctx m
-    , HasSscConfiguration
     , HasProtocolConstants
     )
     => (contents -> m ())
@@ -324,9 +323,7 @@ sendOurData sendIt msgTag dt epoch slMultiplier = do
 -- synchronized).
 generateAndSetNewSecret
     :: forall ctx m.
-       ( HasSscConfiguration
-       , SscMode ctx m
-       , Bi Commitment
+       ( SscMode ctx m
        , HasProtocolConstants
        , HasProtocolMagic
        , HasGenesisData
@@ -392,8 +389,7 @@ randomTimeInInterval interval =
     n = toInteger @Microsecond interval
 
 waitUntilSend
-    :: ( HasSscConfiguration
-       , SscMode ctx m
+    :: ( SscMode ctx m
        , HasProtocolConstants
        )
     => SscTag -> EpochIndex -> Word16 -> m ()
@@ -425,8 +421,7 @@ waitUntilSend msgTag epoch slMultiplier = do
 
 checkForIgnoredCommitmentsWorker
     :: forall ctx m.
-       ( HasSscConfiguration
-       , SscMode ctx m
+       ( SscMode ctx m
        , HasProtocolConstants
        , HasGenesisBlockVersionData
        , HasMisbehaviorMetrics ctx
@@ -448,8 +443,7 @@ checkForIgnoredCommitmentsWorker = \_ -> do
 -- our commitment appears in blocks.
 checkForIgnoredCommitmentsWorkerImpl
     :: forall ctx m.
-       ( HasSscConfiguration
-       , SscMode ctx m
+       ( SscMode ctx m
        , HasProtocolConstants
        , HasGenesisBlockVersionData
        , HasMisbehaviorMetrics ctx
