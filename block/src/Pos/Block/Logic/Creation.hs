@@ -144,8 +144,6 @@ createGenesisBlockAndApply epoch = do
 createGenesisBlockDo
     :: forall ctx m.
        ( MonadCreateBlock ctx m
-       , MonadBlockApply ctx m
-       , CanJsonLog m
        , HasGeneratedSecrets
        , HasGenesisBlockVersionData
        , HasProtocolConstants
@@ -189,7 +187,6 @@ createGenesisBlockDo epoch = do
 
 needCreateGenesisBlock ::
        ( MonadCreateBlock ctx m
-       , MonadBlockApply ctx m
        , HasProtocolConstants
        )
     => EpochIndex
@@ -229,7 +226,6 @@ needCreateGenesisBlock epoch tipHeader = do
 createMainBlockAndApply ::
        forall ctx m.
        ( MonadCreateBlock ctx m
-       , MonadBlockApply ctx m
        , CanJsonLog m
        , HasLens' ctx StateLock
        , HasLens' ctx (StateLockMetrics MemPoolModifyReason)
