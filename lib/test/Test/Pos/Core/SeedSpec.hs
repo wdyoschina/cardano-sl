@@ -11,6 +11,7 @@ import           Test.Hspec.QuickCheck (prop)
 import           Test.Pos.Helpers ()
 import           Test.QuickCheck (Property, (.&&.))
 
+import           Pos.Arbitrary.Core ()
 import           Pos.Core (SharedSeed)
 import           Test.Pos.Util.QuickCheck.Property (formsCommutativeMonoid)
 

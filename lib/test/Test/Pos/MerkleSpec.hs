@@ -14,7 +14,7 @@ import           Test.QuickCheck (Property, (===))
 import           Pos.Binary (Bi)
 import           Pos.Merkle (mkMerkleTree)
 import           Pos.SafeCopy ()
-import           Test.Pos.Helpers (safeCopyEncodeDecode)
+import           Test.Pos.Binary.Helpers (safeCopyEncodeDecode)
 
 spec :: Spec
 spec = describe "Merkle" $ do

@@ -16,6 +16,7 @@ library
                        Test.Pos.Binary.Helpers
                        Test.Pos.Cbor.Canonicity
                        Test.Pos.Cbor.RefImpl
+                       Test.Pos.Binary.Helpers
 
   build-depends:       QuickCheck
                      , base

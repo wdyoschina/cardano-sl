@@ -7399,10 +7399,10 @@ inherit (pkgs) mesa;};
            ];
            executableToolDepends = [ cpphs ];
            testHaskellDepends = [
-             base bytestring cardano-sl cardano-sl-block cardano-sl-core
-             cardano-sl-crypto cardano-sl-txp cardano-sl-util containers
-             cryptonite engine-io hspec lens log-warper QuickCheck universum
-             warp
+             base bytestring cardano-sl cardano-sl-binary-test cardano-sl-block
+             cardano-sl-core cardano-sl-crypto cardano-sl-txp cardano-sl-util
+             containers cryptonite engine-io hspec lens log-warper QuickCheck
+             universum warp
            ];
            testToolDepends = [ cpphs ];
            benchmarkHaskellDepends = [

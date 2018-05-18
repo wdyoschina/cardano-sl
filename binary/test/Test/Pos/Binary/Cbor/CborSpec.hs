@@ -239,3 +239,11 @@ spec = do
                 binaryTest @(HashSet Int)
                 binaryTest @ByteString
                 binaryTest @Text
+
+        describe "Types" $ do
+          -- 100 is not enough to catch some bugs (e.g. there was a bug with
+          -- addresses that only manifested when address's CRC started with 0x00)
+          describe "Bi instances" $ do
+              describe "Util" $ do
+                  binaryTest @(NewestFirst NE U)
+                  binaryTest @(OldestFirst NE U)
