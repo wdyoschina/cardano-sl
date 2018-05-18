@@ -317,7 +317,6 @@ getNoLongerRichmen newEpoch =
 dlgVerifyBlocks ::
        forall ctx m.
        ( MonadDBRead m
-       , MonadIO m -- needed to get richmen
        , MonadUnliftIO m
        , MonadReader ctx m
        , HasLrcContext ctx
@@ -409,11 +408,9 @@ dlgVerifyBlocks blocks = do
 dlgApplyBlocks ::
        forall ctx m.
        ( MonadDelegation ctx m
-       , MonadIO m
        , MonadDBRead m
        , MonadUnliftIO m
        , WithLogger m
-       , MonadMask m
        )
     => OldestFirst NE DlgBlund
     -> m (NonEmpty SomeBatchOp)
@@ -501,8 +498,6 @@ dlgNormalizeOnRollback ::
        , MonadDBRead m
        , MonadUnliftIO m
        , DB.MonadGState m
-       , MonadIO m
-       , MonadMask m
        , HasLrcContext ctx
        , Mockable CurrentTime m
        , HasProtocolMagic
