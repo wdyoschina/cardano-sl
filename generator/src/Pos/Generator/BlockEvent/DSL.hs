@@ -35,6 +35,8 @@ import qualified Data.Map as Map
 
 import           Pos.AllSecrets (AllSecrets)
 import           Pos.Core (GenesisWStakeholders)
+import           Pos.Core.Chrono (NE, NewestFirst (..), OldestFirst (..), toOldestFirst,
+                                  _NewestFirst)
 import           Pos.Generator.Block (BlockTxpGenMode, MonadBlockGen)
 import           Pos.Generator.BlockEvent (BlockApplyResult (..), BlockDesc (..), BlockEvent' (..),
                                            BlockEventApply' (..), BlockEventRollback' (..),

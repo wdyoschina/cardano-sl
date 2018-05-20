@@ -25,6 +25,7 @@ import           Pos.Core (BlockVersionData, ComponentBlock (..), HasCoreConfigu
                            HasGeneratedSecrets, HasGenesisBlockVersionData, HasGenesisData,
                            HasProtocolConstants, HasProtocolMagic, HeaderHash, epochIndexL,
                            epochOrSlotG, headerHash)
+import           Pos.Core.Chrono (NE, NewestFirst (..), OldestFirst (..))
 import           Pos.Core.Ssc (SscPayload (..))
 import           Pos.DB (MonadDBRead, MonadGState, SomeBatchOp (..), gsAdoptedBVData)
 import           Pos.Exception (assertionFailed)

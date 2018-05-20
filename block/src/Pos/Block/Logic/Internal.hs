@@ -37,11 +37,12 @@ import           Pos.Block.BListener (MonadBListener)
 import           Pos.Block.Slog (BypassSecurityCheck (..), MonadSlogApply, MonadSlogBase,
                                  ShouldCallBListener, slogApplyBlocks, slogRollbackBlocks)
 import           Pos.Block.Types (Blund, Undo (undoDlg, undoTx, undoUS))
-import           Pos.Core (ComponentBlock (..), IsGenesisHeader, epochIndexL, HasGeneratedSecrets,
-                           gbHeader, headerHash, mainBlockDlgPayload, mainBlockSscPayload, HasGenesisData,
-                           mainBlockTxPayload, mainBlockUpdatePayload, HasGenesisBlockVersionData,
-                           HasGenesisData, HasProtocolConstants, HasProtocolMagic)
+import           Pos.Core (ComponentBlock (..), HasGeneratedSecrets, HasGenesisBlockVersionData,
+                           HasGenesisData, HasGenesisData, HasProtocolConstants, HasProtocolMagic,
+                           IsGenesisHeader, epochIndexL, gbHeader, headerHash, mainBlockDlgPayload,
+                           mainBlockSscPayload, mainBlockTxPayload, mainBlockUpdatePayload)
 import           Pos.Core.Block (Block, GenesisBlock, MainBlock)
+import           Pos.Core.Chrono (NE, NewestFirst (..), OldestFirst (..))
 import           Pos.DB (MonadDB, MonadDBRead, MonadGState, SomeBatchOp (..))
 import qualified Pos.DB.GState.Common as GS (writeBatchGState)
 import           Pos.Delegation.Class (MonadDelegation)

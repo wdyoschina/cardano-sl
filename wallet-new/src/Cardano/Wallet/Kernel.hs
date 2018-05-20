@@ -46,6 +46,7 @@ import           Cardano.Wallet.Kernel.PrefilterTx (PrefilteredBlock (..), ourUt
 import           Cardano.Wallet.Kernel.Types (txUtxo)
 
 import           Pos.Core (HasConfiguration, TxAux, sumCoins)
+import           Pos.Core.Chrono (OldestFirst)
 import           Pos.Core.Txp (Tx (..), TxAux (..), TxId, TxIn (..), TxOut (..), TxOutAux (..))
 import           Pos.Crypto (EncryptedSecretKey, hash)
 import           Pos.Txp (Utxo)

@@ -62,6 +62,8 @@ import           Pos.AllSecrets (AllSecrets)
 import           Pos.Block.Types (Blund)
 import           Pos.Core (GenesisWStakeholders, HasConfiguration, HeaderHash, headerHash,
                            prevBlockL)
+import           Pos.Core.Chrono (NE, NewestFirst (..), OldestFirst (..), toNewestFirst,
+                                  toOldestFirst, _OldestFirst)
 import           Pos.Crypto.Hashing (hashHexF)
 import           Pos.Generator.Block (BlockGenParams (..), BlockTxpGenMode, MonadBlockGen,
                                       TxGenParams (..), genBlocks)

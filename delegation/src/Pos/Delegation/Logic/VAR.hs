@@ -30,6 +30,7 @@ import           Pos.Core (ComponentBlock (..), EpochIndex (..), HasGenesisBlock
                            HasProtocolMagic, StakeholderId, addressHash, epochIndexL, gbHeader,
                            headerHash, prevBlockL, siEpoch)
 import           Pos.Core.Block (Block, mainBlockDlgPayload, mainBlockSlot)
+import           Pos.Core.Chrono (NE, NewestFirst (..), OldestFirst (..))
 import           Pos.Crypto (ProxySecretKey (..), shortHashF)
 import           Pos.DB (DBError (DBMalformed), MonadDBRead, SomeBatchOp (..))
 import qualified Pos.DB as DB

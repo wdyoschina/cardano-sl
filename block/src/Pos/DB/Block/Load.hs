@@ -21,9 +21,10 @@ import           Formatting (sformat, (%))
 
 import           Pos.Binary.Core ()
 import           Pos.Block.Types (Blund)
-import           Pos.Core (BlockCount, HasDifficulty (difficultyL),
-                           HasPrevBlock (prevBlockL), HeaderHash, HasGenesisHash)
+import           Pos.Core (BlockCount, HasDifficulty (difficultyL), HasGenesisHash,
+                           HasPrevBlock (prevBlockL), HeaderHash)
 import           Pos.Core.Block (Block, BlockHeader)
+import           Pos.Core.Chrono (NewestFirst (..))
 import           Pos.Core.Configuration (genesisHash)
 import           Pos.Crypto (shortHashF)
 import           Pos.DB.Block (getBlund)

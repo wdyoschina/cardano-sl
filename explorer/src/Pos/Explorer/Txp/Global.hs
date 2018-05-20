@@ -10,6 +10,7 @@ import qualified Data.HashMap.Strict as HM
 
 import           Pos.Core (ComponentBlock (..), HasConfiguration, HeaderHash, SlotId (..),
                            epochIndexL, headerHash, headerSlotL)
+import           Pos.Core.Chrono (NewestFirst (..))
 import           Pos.Core.Txp (TxAux, TxUndo)
 import           Pos.DB (SomeBatchOp (..))
 import           Pos.Slotting (getSlotStart)

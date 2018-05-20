@@ -31,12 +31,14 @@ import           UnliftIO (MonadUnliftIO)
 
 import           Pos.Block.Logic.Integrity (VerifyHeaderParams (..), verifyHeader, verifyHeaders)
 import           Pos.Block.Logic.Util (lcaWithMainChain)
-import           Pos.Core (BlockCount, EpochOrSlot (..), HeaderHash, SlotId (..), HasProtocolMagic,
-                           blkSecurityParam, bvdMaxHeaderSize, difficultyL, epochIndexL,
-                           epochOrSlotG, getChainDifficulty, getEpochOrSlot, headerHash,
-                           headerHashG, headerSlotL, prevBlockL,
-                           HasProtocolConstants, HasGenesisHash)
+import           Pos.Core (BlockCount, EpochOrSlot (..), HasGenesisHash, HasProtocolConstants,
+                           HasProtocolMagic, HeaderHash, SlotId (..), blkSecurityParam,
+                           bvdMaxHeaderSize, difficultyL, epochIndexL, epochOrSlotG,
+                           getChainDifficulty, getEpochOrSlot, headerHash, headerHashG, headerSlotL,
+                           prevBlockL)
 import           Pos.Core.Block (BlockHeader (..))
+import           Pos.Core.Chrono (NE, NewestFirst (..), OldestFirst (..), toNewestFirst,
+                                  toOldestFirst, _NewestFirst, _OldestFirst)
 import           Pos.Crypto (hash)
 import           Pos.DB (MonadDBRead)
 import qualified Pos.DB.Block.Load as DB

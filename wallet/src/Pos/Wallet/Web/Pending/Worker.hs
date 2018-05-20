@@ -22,6 +22,7 @@ import           Pos.Client.Txp.Network (TxMode)
 import           Pos.Configuration (HasNodeConfiguration, pendingTxResubmitionPeriod,
                                     walletTxCreationDisabled)
 import           Pos.Core (ChainDifficulty (..), SlotId (..), TxAux, difficultyL)
+import           Pos.Core.Chrono (getOldestFirst)
 import           Pos.Core.Configuration (HasConfiguration)
 import qualified Pos.DB.BlockIndex as DB
 import           Pos.DB.Class (MonadDBRead)

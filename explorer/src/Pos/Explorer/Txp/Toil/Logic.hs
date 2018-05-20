@@ -21,6 +21,7 @@ import           System.Wlog (logError)
 
 import           Pos.Core (Address, BlockVersionData, Coin, EpochIndex, HasConfiguration,
                            HeaderHash, Timestamp, mkCoin, sumCoins, unsafeAddCoin, unsafeSubCoin)
+import           Pos.Core.Chrono (NewestFirst (..))
 import           Pos.Core.Txp (Tx (..), TxAux (..), TxId, TxOut (..), TxOutAux (..), TxUndo, _TxOut)
 import           Pos.Crypto (WithHash (..), hash)
 import           Pos.Explorer.Core (AddrHistory, TxExtra (..))

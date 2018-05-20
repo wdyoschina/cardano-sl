@@ -28,6 +28,7 @@ import           Cardano.Wallet.API.V1.Types (Account, AccountIndex, AccountUpda
 
 import           Pos.Core.Chrono (NE, OldestFirst (..), NewestFirst (..))
 import           Pos.Block.Types (Blund)
+import           Pos.Core.Chrono (NE, NewestFirst (..), OldestFirst (..))
 
 ------------------------------------------------------------
 -- Passive wallet layer

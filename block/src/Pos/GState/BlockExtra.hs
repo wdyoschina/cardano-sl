@@ -26,9 +26,11 @@ import           Serokell.Util.Text (listJson)
 
 import           Pos.Binary.Class (serialize')
 import           Pos.Block.Slog.Types (LastBlkSlots, noLastBlkSlots)
-import           Pos.Core (FlatSlotId, HasHeaderHash, HeaderHash, genesisHash, HasProtocolConstants,
-                           headerHash, slotIdF, unflattenSlotId, HasGenesisHash, HasCoreConfiguration)
+import           Pos.Core (FlatSlotId, HasCoreConfiguration, HasGenesisHash, HasHeaderHash,
+                           HasProtocolConstants, HeaderHash, genesisHash, headerHash, slotIdF,
+                           unflattenSlotId)
 import           Pos.Core.Block (Block, BlockHeader)
+import           Pos.Core.Chrono (OldestFirst (..))
 import           Pos.Crypto (shortHashF)
 import           Pos.DB (DBError (..), MonadDB, MonadDBRead (..), RocksBatchOp (..),
                          dbSerializeValue, getHeader)

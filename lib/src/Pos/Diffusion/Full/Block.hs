@@ -28,17 +28,17 @@ import           Serokell.Util.Text (listJson)
 import           Pos.Binary.Communication ()
 import           Pos.Block.Network (MsgBlock (..), MsgGetBlocks (..), MsgGetHeaders (..),
                                     MsgHeaders (..))
+import           Pos.Communication.Limits (mlMsgBlock, mlMsgGetBlocks, mlMsgGetHeaders,
+                                           mlMsgHeaders)
 import           Pos.Communication.Listener (listenerConv)
 import           Pos.Communication.Message ()
-import           Pos.Communication.Limits (mlMsgGetBlocks, mlMsgHeaders, mlMsgBlock,
-                                           mlMsgGetHeaders)
 import           Pos.Communication.Protocol (Conversation (..), ConversationActions (..),
                                              EnqueueMsg, ListenerSpec, MkListeners (..),
                                              MsgType (..), NodeId, Origin (..), OutSpecs,
-                                             constantListeners, waitForConversations,
-                                             waitForDequeues, recvLimited)
-import           Pos.Core (BlockVersionData, HeaderHash, ProtocolConstants (..),
-                           headerHash, bvdSlotDuration, prevBlockL)
+                                             constantListeners, recvLimited, waitForConversations,
+                                             waitForDequeues)
+import           Pos.Core (BlockVersionData, HeaderHash, ProtocolConstants (..), bvdSlotDuration,
+                           headerHash, prevBlockL)
 import           Pos.Core.Block (Block, BlockHeader (..), MainBlockHeader, blockHeader)
 import           Pos.Crypto (shortHashF)
 import           Pos.DB (DBError (DBMalformed))
@@ -46,6 +46,8 @@ import           Pos.Exception (cardanoExceptionFromException, cardanoExceptionT
 import           Pos.Logic.Types (Logic (..))
 import           Pos.Network.Types (Bucket)
 -- Dubious having this security stuff in here.
+import           Pos.Core.Chrono (NE, NewestFirst (..), OldestFirst (..), toOldestFirst,
+                                  _NewestFirst, _OldestFirst)
 import           Pos.Security.Params (AttackTarget (..), AttackType (..), NodeAttackedError (..),
                                       SecurityParams (..))
 import           Pos.Util (_neHead, _neLast)
@@ -53,7 +55,7 @@ import           Pos.Core.Chrono (NE, NewestFirst (..), OldestFirst (..),
                                   toOldestFirst, _NewestFirst, _OldestFirst)
 import           Pos.Util.Timer (Timer, startTimer)
 import           Pos.Util.TimeWarp (NetworkAddress, nodeIdToAddress)
-import           Pos.Util.Trace (Trace, Severity (..), traceWith)
+import           Pos.Util.Trace (Severity (..), Trace, traceWith)
 
 {-# ANN module ("HLint: ignore Reduce duplication" :: Text) #-}
 

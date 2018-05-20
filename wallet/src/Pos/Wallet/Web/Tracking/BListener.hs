@@ -24,6 +24,7 @@ import           Pos.Block.Types (Blund, undoTx)
 import           Pos.Core (HasConfiguration, HeaderHash, Timestamp, difficultyL, headerSlotL,
                            prevBlockL)
 import           Pos.Core.Block (BlockHeader (..), blockHeader, getBlockHeader, mainBlockTxPayload)
+import           Pos.Core.Chrono (NE, NewestFirst (..), OldestFirst (..))
 import           Pos.Core.Txp (TxAux (..), TxUndo)
 import           Pos.DB.BatchOp (SomeBatchOp)
 import           Pos.DB.Class (MonadDBRead)

@@ -8,6 +8,7 @@ module Pos.Explorer.Core.Types
 import           Universum
 
 import           Pos.Core (HeaderHash, Timestamp)
+import           Pos.Core.Chrono (NewestFirst)
 import           Pos.Core.Txp (TxId, TxUndo)
 import           Pos.Core.Chrono (NewestFirst)
 

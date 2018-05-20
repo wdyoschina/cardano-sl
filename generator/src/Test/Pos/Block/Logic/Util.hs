@@ -24,9 +24,10 @@ import           Test.QuickCheck.Monadic (PropertyM, pick)
 
 import           Pos.AllSecrets (AllSecrets, HasAllSecrets (..), allSecrets)
 import           Pos.Block.Types (Blund)
-import           Pos.Core (BlockCount, GenesisData (..), HasGenesisData,
-                           SlotId (..), epochIndexL, genesisData, HasProtocolMagic, HasProtocolConstants)
+import           Pos.Core (BlockCount, GenesisData (..), HasGenesisData, HasProtocolConstants,
+                           HasProtocolMagic, SlotId (..), epochIndexL, genesisData)
 import           Pos.Core.Block (Block)
+import           Pos.Core.Chrono (NE, OldestFirst (..))
 import           Pos.Generator.Block (BlockGenMode, BlockGenParams (..), MonadBlockGenInit,
                                       genBlocks, tgpTxCountRange)
 import           Pos.Txp (MempoolExt, MonadTxpLocal, TxpGlobalSettings, txpGlobalSettings)

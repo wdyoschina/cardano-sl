@@ -32,6 +32,7 @@ import           Pos.Core (Coin, EpochIndex, EpochOrSlot (..), HasGeneratedSecre
                            HasGenesisBlockVersionData, HasGenesisData, HasGenesisHash,
                            HasProtocolConstants, HasProtocolMagic, SharedSeed, StakeholderId,
                            blkSecurityParam, crucialSlot, epochIndexL, getEpochOrSlot)
+import           Pos.Core.Chrono (NE, NewestFirst (..), toOldestFirst)
 import qualified Pos.DB.Block.Load as DB
 import           Pos.DB.Class (MonadDBRead, MonadGState)
 import qualified Pos.DB.GState.Stakes as GS (getRealStake, getRealTotalStake)

@@ -17,6 +17,7 @@ import           Pos.Block.Slog
 import           Pos.Block.Types
 import           Pos.Context
 import           Pos.Core
+import           Pos.Core.Chrono
 import           Pos.DB
 import           Pos.DB.Block
 import           Pos.DB.DB
@@ -35,8 +36,7 @@ import           Pos.Util.JsonLog.Events
 import           Pos.Util.TimeWarp (CanJsonLog (..))
 import           Pos.WorkMode
 
-import           Cardano.Wallet.WalletLayer (PassiveWalletLayer(..),
-                                             applyBlocks, rollbackBlocks)
+import           Cardano.Wallet.WalletLayer (PassiveWalletLayer (..), applyBlocks, rollbackBlocks)
 
 {-------------------------------------------------------------------------------
   The wallet context and monad

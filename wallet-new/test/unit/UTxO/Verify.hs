@@ -27,6 +27,7 @@ import           Pos.Block.Logic.Integrity (verifyBlocks)
 import           Pos.Block.Slog hiding (slogVerifyBlocks)
 import           Pos.Block.Types
 import           Pos.Core
+import           Pos.Core.Chrono
 import           Pos.DB.Class (MonadGState (..))
 import           Pos.Delegation (DlgUndo (..))
 import           Pos.Txp hiding (tgsVerifyBlocks)

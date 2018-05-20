@@ -30,6 +30,7 @@ import           Pos.Core (Block, HasGeneratedSecrets, HasGenesisBlockVersionDat
                            HasGenesisHash, HasHeaderHash (..), HasProtocolConstants,
                            HasProtocolMagic, HeaderHash, difficultyL, isMoreDifficult)
 import           Pos.Core.Block (BlockHeader)
+import           Pos.Core.Chrono (NE, OldestFirst (..), _OldestFirst)
 import           Pos.Crypto (shortHashF)
 import qualified Pos.DB.BlockIndex as DB
 import           Pos.Diffusion.Types (Diffusion)

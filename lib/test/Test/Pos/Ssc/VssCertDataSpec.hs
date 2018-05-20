@@ -21,6 +21,7 @@ import           Pos.Arbitrary.Ssc ()
 import           Pos.Core (EpochIndex (..), EpochOrSlot (..), HasConfiguration, SlotId (..),
                            VssCertificate (..), getCertId, getVssCertificatesMap, mkVssCertificate,
                            slotSecurityParam)
+import           Pos.Core.Chrono (NewestFirst (..))
 import           Pos.Core.Slotting (flattenEpochOrSlot, unflattenSlotId)
 import           Pos.Crypto (protocolMagic)
 import           Pos.Ssc (SscGlobalState (..), VssCertData (..), delete, empty, expiryEoS, filter,

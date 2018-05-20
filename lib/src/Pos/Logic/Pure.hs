@@ -20,6 +20,7 @@ import           Pos.Core.Block (BlockHeaderAttributes, BlockSignature (..), Mai
                                  MainBlockHeader, MainBlockchain, MainBody (..),
                                  MainConsensusData (..), MainExtraBodyData (..),
                                  MainExtraHeaderData (..), MainProof (..))
+import           Pos.Core.Chrono (NewestFirst (..), OldestFirst (..))
 import           Pos.Core.Common (BlockCount (..), ChainDifficulty (..))
 import           Pos.Core.Delegation (DlgPayload (..))
 import           Pos.Core.Slotting (EpochIndex (..), LocalSlotIndex (..), SlotId (..))

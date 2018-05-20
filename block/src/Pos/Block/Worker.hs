@@ -32,12 +32,13 @@ import           Pos.Block.Slog (scCQFixedMonitorState, scCQOverallMonitorState,
                                  scCrucialValuesLabel, scDifficultyMonitorState,
                                  scEpochMonitorState, scGlobalSlotMonitorState,
                                  scLocalSlotMonitorState, slogGetLastSlots)
-import           Pos.Core (BlockVersionData (..), ChainDifficulty, FlatSlotId, HasProtocolConstants,
-                           SlotId (..), Timestamp (Timestamp), addressHash, blkSecurityParam,
-                           difficultyL, epochOrSlotToSlot, epochSlots, flattenSlotId, gbHeader,
-                           getEpochOrSlot, getOurPublicKey, getSlotIndex, slotIdF, unflattenSlotId,
-                           HasGeneratedSecrets, HasGenesisData, HasGenesisHash, HasGenesisBlockVersionData,
-                           HasProtocolMagic)
+import           Pos.Core (BlockVersionData (..), ChainDifficulty, FlatSlotId, HasGeneratedSecrets,
+                           HasGenesisBlockVersionData, HasGenesisData, HasGenesisHash,
+                           HasProtocolConstants, HasProtocolMagic, SlotId (..),
+                           Timestamp (Timestamp), addressHash, blkSecurityParam, difficultyL,
+                           epochOrSlotToSlot, epochSlots, flattenSlotId, gbHeader, getEpochOrSlot,
+                           getOurPublicKey, getSlotIndex, slotIdF, unflattenSlotId)
+import           Pos.Core.Chrono (OldestFirst (..))
 import           Pos.Crypto (ProxySecretKey (pskDelegatePk))
 import           Pos.DB (gsIsBootstrapEra)
 import qualified Pos.DB.BlockIndex as DB
@@ -49,12 +50,11 @@ import qualified Pos.Diffusion.Types as Diffusion (Diffusion (announceBlockHeade
 import qualified Pos.Lrc.DB as LrcDB (getLeadersForEpoch)
 import           Pos.Recovery.Info (getSyncStatus, getSyncStatusK, needTriggerRecovery,
                                     recoveryCommGuard)
-import           Pos.Reporting (MetricMonitor (..), MetricMonitorState,
-                                HasMisbehaviorMetrics, noReportMonitor,
-                                recordValue, reportOrLogE)
+import           Pos.Reporting (HasMisbehaviorMetrics, MetricMonitor (..), MetricMonitorState,
+                                noReportMonitor, recordValue, reportOrLogE)
 import           Pos.Slotting (ActionTerminationPolicy (..), OnNewSlotParams (..),
-                               currentTimeSlotting, defaultOnNewSlotParams,
-                               getSlotStartEmpatically, onNewSlot)
+                               currentTimeSlotting, defaultOnNewSlotParams, getSlotStartEmpatically,
+                               onNewSlot)
 import           Pos.Update.DB (getAdoptedBVData)
 import           Pos.Core.Chrono (OldestFirst (..))
 import           Pos.Util.JsonLog.Events (jlCreatedBlock)

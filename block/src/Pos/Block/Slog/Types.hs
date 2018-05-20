@@ -22,6 +22,7 @@ import           System.Metrics.Label (Label)
 
 import           Pos.Core (ChainDifficulty, EpochIndex, FlatSlotId, HasProtocolConstants,
                            LocalSlotIndex, slotIdF, unflattenSlotId)
+import           Pos.Core.Chrono (OldestFirst (..))
 import           Pos.Reporting.Metrics (MetricMonitorState)
 import           Pos.Core.Chrono (OldestFirst (..))
 

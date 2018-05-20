@@ -23,6 +23,7 @@ import           Pos.Communication (NodeId)
 import           Pos.Core (Block, BlockHeader, BlockVersionData, HasConfiguration, HeaderHash,
                            ProxySKHeavy, StakeholderId, TxAux (..), addressHash, getCertId,
                            lookupVss)
+import           Pos.Core.Chrono (NE, NewestFirst, OldestFirst)
 import           Pos.Core.Ssc (getCommitmentsMap)
 import           Pos.Core.Update (UpdateProposal (..), UpdateVote (..))
 import           Pos.Crypto (hash)

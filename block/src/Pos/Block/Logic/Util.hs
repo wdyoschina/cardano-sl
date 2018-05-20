@@ -29,6 +29,7 @@ import           Pos.Block.Slog.Types (HasSlogGState)
 import           Pos.Core (BlockCount, FlatSlotId, HasProtocolConstants, HeaderHash, Timestamp (..),
                            difficultyL, flattenSlotId, headerHash, prevBlockL)
 import           Pos.Core.Block (BlockHeader)
+import           Pos.Core.Chrono (NE, OldestFirst (..))
 import           Pos.Core.Configuration (blkSecurityParam)
 import qualified Pos.DB.BlockIndex as DB
 import           Pos.DB.Class (MonadBlockDBRead)

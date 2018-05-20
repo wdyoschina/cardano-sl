@@ -61,6 +61,7 @@ import           Pos.Core (AddrType (..), Address (..), Coin, EpochIndex, Header
                            isUnknownAddressType, makeRedeemAddress, siEpoch, siSlot, sumCoins,
                            timestampToPosix, unsafeAddCoin, unsafeIntegerToCoin, unsafeSubCoin)
 import           Pos.Core.Block (Block, MainBlock, mainBlockSlot, mainBlockTxPayload, mcdSlot)
+import           Pos.Core.Chrono (NewestFirst (..))
 import           Pos.Core.Txp (Tx (..), TxAux, TxId, TxOutAux (..), taTx, txOutValue, txpTxs,
                                _txOutputs)
 import           Pos.Slotting (MonadSlots (..), getSlotStart)

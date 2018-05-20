@@ -56,16 +56,16 @@ import           Pos.Binary.Core ()
 import           Pos.Binary.Crypto ()
 import           Pos.Core (EpochIndex (..), LocalSlotIndex, SharedSeed (..), SlotCount, SlotId (..),
                            StakeholderId, addressHash, unsafeMkLocalSlotIndexExplicit)
-import           Pos.Core.Configuration (HasProtocolConstants, vssMaxTTL, vssMinTTL,
-                                         protocolConstants)
-import           Pos.Core.ProtocolConstants (ProtocolConstants (..),
-                                             pcSlotSecurityParam)
+import           Pos.Core.Configuration (HasProtocolConstants, protocolConstants, vssMaxTTL,
+                                         vssMinTTL)
+import           Pos.Core.Limits (stripHashMap)
+import           Pos.Core.ProtocolConstants (ProtocolConstants (..), pcSlotSecurityParam)
 import           Pos.Core.Ssc (Commitment (..), CommitmentsMap (getCommitmentsMap), Opening (..),
                                SignedCommitment, SscPayload (..), VssCertificate (vcExpiryEpoch),
                                VssCertificatesMap (..), mkCommitmentsMapUnsafe)
-import           Pos.Crypto (ProtocolMagic, Secret, SecretKey, SignTag (SignCommitment),
-                             Threshold, VssPublicKey, checkSig, genSharedSecret,
-                             getDhSecret, secretToDhSecret, sign, toPublic, verifySecret)
+import           Pos.Crypto (ProtocolMagic, Secret, SecretKey, SignTag (SignCommitment), Threshold,
+                             VssPublicKey, checkSig, genSharedSecret, getDhSecret, secretToDhSecret,
+                             sign, toPublic, verifySecret)
 import           Pos.Crypto.Configuration (HasProtocolMagic, protocolMagic)
 import           Pos.Core.Limits (stripHashMap)
 

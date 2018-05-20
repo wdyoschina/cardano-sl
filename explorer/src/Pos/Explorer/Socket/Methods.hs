@@ -67,6 +67,7 @@ import qualified Pos.Block.Logic as DB
 import           Pos.Block.Types (Blund)
 import           Pos.Core (Address, HeaderHash)
 import           Pos.Core.Block (Block, mainBlockTxPayload)
+import           Pos.Core.Chrono (getOldestFirst)
 import           Pos.Core.Txp (Tx (..), TxOut (..), TxOutAux (..), txOutAddress, txpTxs)
 import           Pos.Crypto (hash, withHash)
 import           Pos.DB.Block (getBlund)

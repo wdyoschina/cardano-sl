@@ -55,10 +55,12 @@ import           Data.Time.Units (Microsecond, TimeUnit (..))
 import           Formatting (build, float, sformat, shown, (%))
 import           Pos.Block.Types (Blund, undoTx)
 import           Pos.Client.Txp.History (TxHistoryEntry (..), txHistoryListToMap)
-import           Pos.Core (Address, BlockCount (..), ChainDifficulty (..), HasConfiguration, HasGenesisHash,
-                           HasDifficulty (..), HasProtocolConstants, HeaderHash, Timestamp (..),
-                           blkSecurityParam, genesisHash, headerHash, headerSlotL, timestampToPosix)
+import           Pos.Core (Address, BlockCount (..), ChainDifficulty (..), HasConfiguration,
+                           HasDifficulty (..), HasGenesisHash, HasProtocolConstants, HeaderHash,
+                           Timestamp (..), blkSecurityParam, genesisHash, headerHash, headerSlotL,
+                           timestampToPosix)
 import           Pos.Core.Block (BlockHeader (..), getBlockHeader, mainBlockTxPayload)
+import           Pos.Core.Chrono (getNewestFirst)
 import           Pos.Core.Txp (TxAux (..), TxId, TxUndo)
 import           Pos.Crypto (WithHash (..), shortHashF, withHash)
 import           Pos.DB.Block (getBlund)

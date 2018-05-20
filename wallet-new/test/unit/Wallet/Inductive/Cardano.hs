@@ -19,6 +19,7 @@ import           Cardano.Wallet.Kernel.Types
 import qualified Data.Text.Buildable
 import           Formatting (bprint, build, (%))
 import           Pos.Core (Coin, HasConfiguration, unsafeIntegerToCoin)
+import           Pos.Core.Chrono
 import           Pos.Crypto (EncryptedSecretKey)
 import           Pos.Txp (Utxo, formatUtxo)
 import           Pos.Core.Chrono

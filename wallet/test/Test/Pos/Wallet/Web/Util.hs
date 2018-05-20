@@ -1,10 +1,10 @@
 -- | Useful functions for testing scenarios.
 
-{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE FlexibleContexts           #-}
+{-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings          #-}
+{-# LANGUAGE TypeApplications           #-}
 
 module Test.Pos.Wallet.Web.Util
        (
@@ -42,6 +42,7 @@ import           Pos.Client.Txp.Balances (getBalance)
 import           Pos.Core (Address, BlockCount, Coin, HasConfiguration, genesisSecretsPoor,
                            headerHashG)
 import           Pos.Core.Block (blockHeader)
+import           Pos.Core.Chrono (OldestFirst (..))
 import           Pos.Core.Common (IsBootstrapEraAddr (..), deriveLvl2KeyPair)
 import           Pos.Core.Genesis (poorSecretToEncKey)
 import           Pos.Core.Txp (TxIn, TxOut (..), TxOutAux (..))

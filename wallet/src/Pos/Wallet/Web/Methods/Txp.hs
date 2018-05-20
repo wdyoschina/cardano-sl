@@ -22,6 +22,7 @@ import           Pos.Client.KeyStorage (MonadKeys)
 import           Pos.Client.Txp.Addresses (MonadAddresses (..))
 import           Pos.Client.Txp.Util (InputSelectionPolicy (..), PendingAddresses (..),
                                       isCheckedTxError)
+import           Pos.Core.Chrono (getNewestFirst, toNewestFirst)
 import           Pos.Core.Common (Coin)
 import           Pos.Core.Txp (Tx (..), TxAux (..), TxOut (..), TxOutAux (..))
 import           Pos.Crypto (PassPhrase, hash)
