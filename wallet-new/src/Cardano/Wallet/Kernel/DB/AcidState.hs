@@ -33,6 +33,7 @@ module Cardano.Wallet.Kernel.DB.AcidState (
 
 import           Universum
 
+import qualified Data.Map.Strict as Map
 import           Control.Lens.TH (makeLenses)
 import           Data.Acid (Query, Update, makeAcidic)
 import           Data.SafeCopy (base, deriveSafeCopy)
@@ -110,10 +111,16 @@ newPending accountId tx = runUpdate' . zoom dbHdWallets $
 -- NOTE: Calls to 'applyBlock' must be sequentialized by the caller
 -- (although concurrent calls to 'applyBlock' cannot interfere with each
 -- other, 'applyBlock' must be called in the right order.)
-applyBlock :: (PrefilteredBlock, BlockMeta) -> Update DB ()
-applyBlock block = runUpdateNoErrors $
-    zoomAll (dbHdWallets . hdWalletsAccounts) $
-      hdAccountCheckpoints %~ Spec.applyBlock block
+applyBlock :: (Map HdAccountId PrefilteredBlock, BlockMeta) -> Update DB ()
+applyBlock (block, meta) = runUpdateNoErrors $
+    zoomAll (dbHdWallets . hdWalletsAccounts) $ \acc -> do
+      case lookupPrefBlock acc of
+          Just b -> do
+            acc & hdAccountCheckpoints %~ Spec.applyBlock (b,meta)
+          Nothing -> do -- there might be no PrefilteredBlock for the accountId
+            acc
+    where
+        lookupPrefBlock acc' = Map.lookup (acc' ^. hdAccountId) block
 
 -- | Switch to a fork
 --

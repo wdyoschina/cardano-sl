@@ -50,20 +50,20 @@ data EventCallbacks h m = EventCallbacks {
       -- The callback is given the translated UTxO of the bootstrap
       -- transaction (we cannot give it the translated transaction because
       -- we cannot translate the bootstrap transaction).
-      walletBootT       :: InductiveCtxt h -> Utxo -> m Kernel.AccountId
+      walletBootT       :: InductiveCtxt h -> Utxo -> m HD.HdAccountId
 
       -- | Apply a block
-    , walletApplyBlockT :: InductiveCtxt h -> Kernel.AccountId -> RawResolvedBlock -> m ()
+    , walletApplyBlockT :: InductiveCtxt h -> HD.HdAccountId -> RawResolvedBlock -> m ()
 
       -- | Insert new pending transaction
-    , walletNewPendingT :: InductiveCtxt h -> Kernel.AccountId -> RawResolvedTx -> m ()
+    , walletNewPendingT :: InductiveCtxt h -> HD.HdAccountId -> RawResolvedTx -> m ()
 
       -- | Rollback
       --
       -- TODO: Do we want to call 'switch' here? If so, we need some of the logic
       -- from the wallet worker thread to collapse multiple rollbacks and
       -- apply blocks into a single call to switch
-    , walletRollbackT   :: InductiveCtxt h -> Kernel.AccountId -> m ()
+    , walletRollbackT   :: InductiveCtxt h -> HD.HdAccountId -> m ()
     }
 
 -- | The context in which a function of 'EventCallbacks' gets called
@@ -100,7 +100,7 @@ interpretT mkWallet EventCallbacks{..} Inductive{..} =
           accountId <- liftTranslate $ walletBootT ctxt utxo'
           goEvents accountId history w' (getOldestFirst inductiveEvents)
 
-    goEvents :: Kernel.AccountId
+    goEvents :: HD.HdAccountId
              -> NewestFirst [] (WalletEvent h Addr)
              -> Wallet h Addr
              -> [WalletEvent h Addr]
@@ -156,7 +156,7 @@ equivalentT activeWallet (pk,esk) = \mkWallet w ->
 
     walletBootT :: InductiveCtxt h
                 -> Utxo
-                -> TranslateT (EquivalenceViolation h) m Kernel.AccountId
+                -> TranslateT (EquivalenceViolation h) m HD.HdAccountId
     walletBootT ctxt utxo = do
 
         accountId <- liftIO $ Kernel.createWalletHdRnd passiveWallet walletName accountName (pk,esk) utxo
@@ -167,7 +167,7 @@ equivalentT activeWallet (pk,esk) = \mkWallet w ->
             accountName = HD.AccountName "(test account)"
 
     walletApplyBlockT :: InductiveCtxt h
-                      -> Kernel.AccountId
+                      -> HD.HdAccountId
                       -> RawResolvedBlock
                       -> TranslateT (EquivalenceViolation h) m ()
     walletApplyBlockT ctxt accountId block = do
@@ -175,7 +175,7 @@ equivalentT activeWallet (pk,esk) = \mkWallet w ->
         checkWalletState ctxt accountId
 
     walletNewPendingT :: InductiveCtxt h
-                      -> Kernel.AccountId
+                      -> HD.HdAccountId
                       -> RawResolvedTx
                       -> TranslateT (EquivalenceViolation h) m ()
     walletNewPendingT ctxt accountId tx = do
@@ -183,12 +183,12 @@ equivalentT activeWallet (pk,esk) = \mkWallet w ->
         checkWalletState ctxt accountId
 
     walletRollbackT :: InductiveCtxt h
-                    -> Kernel.AccountId
+                    -> HD.HdAccountId
                     -> TranslateT (EquivalenceViolation h) m ()
     walletRollbackT _ _ = error "walletRollbackT: TODO"
 
     checkWalletState :: InductiveCtxt h
-                     -> Kernel.AccountId
+                     -> HD.HdAccountId
                      -> TranslateT (EquivalenceViolation h) m ()
     checkWalletState ctxt@InductiveCtxt{..} accountId = do
         cmp "utxo" utxo (`Kernel.accountUtxo` accountId)
