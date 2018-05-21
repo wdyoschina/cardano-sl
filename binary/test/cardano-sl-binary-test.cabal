@@ -17,9 +17,11 @@ library
                        Test.Pos.Cbor.Canonicity
                        Test.Pos.Cbor.RefImpl
                        Test.Pos.Binary.Helpers
+                       Test.Pos.Binary.Tripping
 
   build-depends:       QuickCheck
                      , base
+                     , binary
                      , bytestring
                      , cardano-sl-binary
                      , cardano-sl-util
@@ -29,11 +31,14 @@ library
                      , cryptonite
                      , formatting
                      , half
+                     , hedgehog
                      , hspec
                      , mtl
+                     , pretty-show
                      , quickcheck-instances
                      , safecopy
                      , text
+                     , text-format
                      , tagged
                      , universum
 
