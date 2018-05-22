@@ -14762,6 +14762,69 @@ mainnet_wallet_linux64: &mainnet_wallet_linux64
       bvMinor: 1
       bvAlt: 0
 
+
+##############################################################################
+##                                                                          ##
+##   Testnet config                                                         ##
+##                                                                          ##
+##############################################################################
+
+testnet_full: &testnet_full
+  <<: *mainnet_base
+  core:
+    <<: *mainnet_base_core
+    genesis:
+      src:
+        file: testnet-genesis.json
+        hash: 9f8a5f8682b46baf85bc6a87cec3fa843c4848481bcbacdbf511dde3899d315a
+
+testnet_wallet: &testnet_wallet
+  <<: *testnet_full
+  update:
+    applicationName: csl-daedalus
+    applicationVersion: 0
+    lastKnownBlockVersion:
+      bvMajor: 0
+      bvMinor: 1
+      bvAlt: 0
+
+testnet_wallet_win64: &testnet_wallet_win64
+  <<: *testnet_wallet
+
+testnet_wallet_macos64: &testnet_wallet_macos64
+  <<: *testnet_wallet
+
+testnet_wallet_linux64: &testnet_wallet_linux64
+  <<: *testnet_wallet
+
+
+# Should be used to generate genesis
+testnet_launch: &testnet_launch
+  <<: *mainnet_base
+  core: &testnet_gen_core
+    <<: *mainnet_base_core
+    genesis:
+      <<: *mainnet_base_genesis
+      spec:
+        <<: *mainnet_base_spec
+        protocolConstants:
+          <<: *mainnet_base_protocolConstants
+          protocolMagic: 1097911063
+        avvmDistr: *mainnet_avvmDistr
+        initializer:
+          testBalance:
+            poors:        100
+            richmen:      7
+            richmenShare: 0.93
+            totalBalance: 13887504355000000
+            useHDAddresses: True
+          fakeAvvmBalance:
+            count: 100
+            oneBalance: 1000000000000 # 1e6 ADA
+          avvmBalanceFactor: 0.1
+          useHeavyDlg: True
+          seed: 0 # should be overridden using --configuration-seed
+
 ##############################################################################
 ##                                                                          ##
 ##   Mainnet dryrun config sample                                           ##
