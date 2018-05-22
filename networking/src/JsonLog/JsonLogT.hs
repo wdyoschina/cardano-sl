@@ -149,9 +149,11 @@ jsonLogDefault jlc x =
                 `catchAny` \e -> do
                     logWarning $ sformat ("error in deciding whether to json log: "%shown) e
                     return False
+            logWarning "Started JSONlogging"
             when b $ liftIO (withMVar v $ \h -> (hPut h (encode event) >> hFlush h))
                 `catchAny` \e ->
                     logWarning $ sformat ("can't write json log: "%shown) e
+            logWarning "Ended JSONlogging"
 
 instance ( MonadIO m
          , WithLogger m

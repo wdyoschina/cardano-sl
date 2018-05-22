@@ -52,6 +52,7 @@ import           Pos.Util.JsonLog.Events (JsonLogConfig (..), jsonLogConfigFromH
 import           Pos.Util.Trace (wlogTrace)
 import           Pos.Web.Server (withRoute53HealthCheckApplication)
 import           Pos.WorkMode (RealMode, RealModeContext (..))
+import           System.Wlog (logDebug)
 
 ----------------------------------------------------------------------------
 -- High level runners
@@ -106,6 +107,7 @@ elimRealMode
     -> RealMode ext t
     -> IO t
 elimRealMode NodeResources {..} diffusion action = runProduction $ do
+    logDebug "JSON config initialization"
     jsonLogConfig <- maybe
         (pure JsonLogDisabled)
         jsonLogConfigFromHandle
