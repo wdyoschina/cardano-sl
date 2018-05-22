@@ -191,8 +191,8 @@ equivalentT activeWallet (pk,esk) = \mkWallet w ->
                      -> HD.HdAccountId
                      -> TranslateT (EquivalenceViolation h) m ()
     checkWalletState ctxt@InductiveCtxt{..} accountId = do
-        cmp "utxo" utxo (`Kernel.accountUtxo` accountId)
-        cmp "totalBalance" totalBalance (`Kernel.totalBalance` accountId)
+        cmp "utxo"          utxo         (`Kernel.accountUtxo` accountId)
+        cmp "totalBalance"  totalBalance (`Kernel.accountTotalBalance` accountId)
         -- TODO: check other properties
       where
         cmp :: ( Interpret h a

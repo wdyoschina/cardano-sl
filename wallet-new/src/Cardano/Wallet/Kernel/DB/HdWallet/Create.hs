@@ -15,6 +15,9 @@ import           Universum
 import           Control.Lens (at, (.=))
 import           Data.SafeCopy (base, deriveSafeCopy)
 
+import qualified Data.Text.Buildable
+import           Formatting (bprint, (%), sformat, build)
+
 import qualified Pos.Core as Core
 
 import           Cardano.Wallet.Kernel.DB.HdWallet
@@ -143,3 +146,15 @@ createHdAddress addrId address = do
         , _hdAddressIsUsed   = error "TODO: _hdAddressIsUsed"
         , _hdAddressIsChange = error "TODO: _hdAddressIsChange"
         }
+
+{-------------------------------------------------------------------------------
+  Pretty printing
+-------------------------------------------------------------------------------}
+
+instance Buildable CreateHdRootError where
+    build (CreateHdRootExists rootId)
+        = bprint ("CreateHdRootError::CreateHdRootExists "%build) rootId
+
+instance Buildable CreateHdAccountError where 
+    build (CreateHdAccountUnknown (UnknownHdRoot rootId))
+        = bprint ("CreateHdAccountError::CreateHdAccountUnknown "%build) rootId

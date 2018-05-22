@@ -60,6 +60,9 @@ import           Control.Lens.TH (makeLenses)
 import qualified Data.IxSet.Typed as IxSet
 import           Data.SafeCopy (base, deriveSafeCopy)
 
+import qualified Data.Text.Buildable
+import           Formatting (bprint, (%), sformat, build)
+
 import qualified Pos.Core as Core
 import qualified Pos.Crypto as Core
 
@@ -362,3 +365,25 @@ zoomHdAddressId embedErr addrId =
 
     embedErr' :: UnknownHdAccount -> e
     embedErr' = embedErr . embedUnknownHdAccount
+
+{-------------------------------------------------------------------------------
+  Pretty printing
+-------------------------------------------------------------------------------}
+
+instance Buildable HdRootId where
+    build (HdRootId keyInDb)
+        = bprint ("HdRootId: "%build) (_fromDb keyInDb)
+
+instance Buildable HdAccountIx where
+    build (HdAccountIx ix)
+        = bprint ("HdAccountIx: "%build) ix
+
+instance Buildable HdAccountId where
+    build (HdAccountId parentId accountIx)
+        = bprint ("HdAccountId: "%build%", "%build) parentId accountIx
+
+instance Buildable UnknownHdAccount where
+    build (UnknownHdAccountRoot rootId)
+        = bprint ("UnknownHdAccountRoot: "%build) rootId
+    build (UnknownHdAccount accountId)
+        = bprint ("UnknownHdAccount accountId: "%build) accountId

@@ -4,8 +4,9 @@ module Cardano.Wallet.Kernel.DB.Spec.Util (
   , Balance
   , available
   , balance
-  , balanceI -- TODO private?
+  , balanceI
   , disjoint
+  , isValidPendingTx
   , pendingUtxo
   , txAuxInputSet
   , txIns
@@ -73,3 +74,10 @@ available utxo pending = utxoRemoveInputs utxo (txIns pending)
 
 pendingUtxo :: PendingTxs -> Utxo
 pendingUtxo pending = unionTxOuts $ map (txUtxo . taTx) $ Map.elems pending
+
+isValidPendingTx :: TxAux -> Utxo -> Bool
+isValidPendingTx tx availableUtxo
+    = txInputs `Set.isSubsetOf` availableInputs
+    where
+        txInputs        = txAuxInputSet tx
+        availableInputs = utxoInputs availableUtxo

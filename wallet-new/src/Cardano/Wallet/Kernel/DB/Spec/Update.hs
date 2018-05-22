@@ -1,10 +1,7 @@
 -- | UPDATE operations on the wallet-spec state
 module Cardano.Wallet.Kernel.DB.Spec.Update (
-    -- * TODO remove with refactor of active wallet tests to AcidState wallet
-    updateUtxo
-  , updatePending
     -- * Errors
-  , NewPendingFailed(..)
+  NewPendingFailed(..)
     -- * Updates
   , newPending
   , applyBlock
@@ -39,7 +36,7 @@ import           Cardano.Wallet.Kernel.DB.Util.AcidState
 -- | Errors thrown by 'newPending'
 data NewPendingFailed =
     -- | Some inputs are not in the wallet utxo
-    NewPendingInputUnavailable (InDb (Core.TxIn))
+    NewPendingInputUnavailable (Set (Core.TxIn))
 
 deriveSafeCopy 1 'base ''NewPendingFailed
 
@@ -67,26 +64,23 @@ deriveSafeCopy 1 'base ''NewPendingFailed
 newPending :: InDb Core.TxAux
            -> Update' Checkpoints NewPendingFailed ()
 newPending tx = do
-    -- TODO refactor
     checkpoints <- get
-    let utxo = checkpoints ^. currentUtxo
-        pendingTxs = checkpoints ^. currentPending ^. pendingTransactions ^. fromDb
-        availableInputs = utxoInputs $ available utxo pendingTxs
-        isValid = txAuxInputSet tx' `Set.isSubsetOf` availableInputs
-    if isValid
-        then put $ insertPending checkpoints tx'
-        else error "NewPendingInputUnavailable (InDb (Core.TxIn))"
-        -- TODO (single TxIn!?) else throwError $ NewPendingInputUnavailable (InDb (Core.TxIn))
+    let available' = available (checkpoints ^. currentUtxo) (checkpoints ^. currentPendingTxs)
+
+    if isValidPendingTx tx' available'
+        then
+            put $ insertPending checkpoints
+        else do
+            let unavailableInputs = txAuxInputSet tx' `Set.difference` utxoInputs available'
+            throwError $ NewPendingInputUnavailable unavailableInputs
+
     return ()
     where
         tx' = tx ^. fromDb
-        txId = hash $ Core.taTx tx'
 
-        insertPending :: Checkpoints -> Core.TxAux -> Checkpoints
-        insertPending cs tx_
-            = over (currentPending . pendingTransactions . fromDb)
-                   (Map.insert txId tx_)
-                   cs
+        insertPending :: Checkpoints -> Checkpoints
+        insertPending cs = cs & currentPendingTxs %~ Map.insert txId tx'
+            where txId = hash $ Core.taTx tx'
 
 -- | Apply the PrefilteredBlock to the current Checkpoint and append
 --   the new checkpoint to the given checkpoints.
@@ -102,9 +96,9 @@ applyBlock (prefBlock, _bMeta) checkpoints
         , _checkpointBlockMeta      = blockMeta''
         } NE.<| checkpoints
     where
-        utxo' = checkpoints ^. currentUtxo
+        utxo'        = checkpoints ^. currentUtxo
         utxoBalance' = checkpoints ^. currentUtxoBalance
-        pending' = checkpoints ^. currentPending . pendingTransactions . fromDb
+        pending'     = checkpoints ^. currentPendingTxs
 
         (utxo'', balance'') = updateUtxo prefBlock (utxo', utxoBalance')
         pending''           = updatePending prefBlock pending'
