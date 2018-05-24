@@ -6,7 +6,7 @@ module Pos.GState.GState
 
 import           Universum
 
-import           Pos.Core (GenesisData (..), HasConfiguration, HeaderHash, genesisData)
+import           Pos.Core (GenesisData (..), HeaderHash, genesisData)
 import           Pos.DB.Class (MonadDB)
 import           Pos.DB.GState.Common (initGStateCommon, isInitialized, setInitialized)
 import           Pos.Delegation.DB (initGStateDlg)
@@ -21,7 +21,7 @@ prepareGStateDB ::
        forall ctx m.
        ( MonadReader ctx m
        , MonadDB m
-       , HasConfiguration)
+       )
     => HeaderHash
     -> m ()
 prepareGStateDB initialTip = unlessM isInitialized $ do

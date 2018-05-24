@@ -12,7 +12,7 @@ module Pos.DB.DB
 import           Universum
 
 import           Pos.Block.Base (genesisBlock0)
-import           Pos.Core (BlockVersionData, HasConfiguration, headerHash,
+import           Pos.Core (BlockVersionData, headerHash,
                            GenesisHash (..), genesisHash, protocolMagic)
 import           Pos.DB.Block (prepareBlockDB)
 import           Pos.DB.Class (MonadDB, MonadDBRead (..))
@@ -26,7 +26,6 @@ initNodeDBs
     :: forall ctx m.
        ( MonadReader ctx m
        , MonadDB m
-       , HasConfiguration
        )
     => m ()
 initNodeDBs = do
