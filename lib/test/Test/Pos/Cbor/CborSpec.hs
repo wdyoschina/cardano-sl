@@ -69,7 +69,7 @@ import           Pos.Slotting.Types (SlottingData)
 import qualified Pos.Ssc as Ssc
 import qualified Pos.Txp as T
 import qualified Pos.Update as U
-import           Pos.Util.Chrono (NE, NewestFirst, OldestFirst)
+import           Pos.Core.Chrono (NE, NewestFirst, OldestFirst)
 import           Pos.Util.UserSecret (UserSecret, WalletUserSecret)
 import qualified Test.Pos.Cbor.RefImpl as R
 import           Test.Pos.Configuration (withDefConfiguration)

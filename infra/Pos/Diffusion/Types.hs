@@ -22,7 +22,7 @@ import           Pos.Core.Ssc (InnerSharesMap, Opening, SignedCommitment, VssCer
 import           Pos.Core.Txp (TxAux)
 import           Pos.Core.Update (UpId, UpdateProposal, UpdateVote)
 import           Pos.Reporting.Health.Types (HealthStatus (..))
-import           Pos.Util.Chrono (OldestFirst (..))
+import           Pos.Core.Chrono (OldestFirst (..))
 
 import qualified Data.Map.Strict as Map
 

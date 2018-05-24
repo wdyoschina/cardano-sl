@@ -30,7 +30,7 @@ import           Pos.Generator.BlockEvent (BlockApplyResult (..), BlockEvent, Bl
                                            berOutValid)
 import           Pos.Ssc.Configuration (HasSscConfiguration)
 import           Pos.Txp (MonadTxpLocal)
-import           Pos.Util.Chrono (NE, OldestFirst)
+import           Pos.Core.Chrono (NE, OldestFirst)
 import           Pos.Util.Util (eitherToThrow, lensOf)
 import           Test.Pos.Block.Logic.Mode (BlockTestContext, PureDBSnapshotsVar (..))
 import           Test.Pos.Block.Logic.Util (satisfySlotCheck)
