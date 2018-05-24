@@ -31,11 +31,10 @@ import           UnliftIO (MonadUnliftIO)
 
 import           Pos.Block.Logic.Integrity (VerifyHeaderParams (..), verifyHeader, verifyHeaders)
 import           Pos.Block.Logic.Util (lcaWithMainChain)
-import           Pos.Core (BlockCount, EpochOrSlot (..), HeaderHash, SlotId (..), HasProtocolMagic,
+import           Pos.Core (BlockCount, EpochOrSlot (..), HeaderHash, SlotId (..),
                            blkSecurityParam, bvdMaxHeaderSize, difficultyL, epochIndexL,
                            epochOrSlotG, getChainDifficulty, getEpochOrSlot, headerHash,
-                           headerHashG, headerSlotL, prevBlockL,
-                           HasProtocolConstants, HasGenesisHash)
+                           headerHashG, headerSlotL, prevBlockL)
 import           Pos.Core.Block (BlockHeader (..))
 import           Pos.Crypto (hash)
 import           Pos.DB (MonadDBRead)
@@ -79,7 +78,6 @@ classifyNewHeader
     ( MonadSlots ctx m
     , MonadDBRead m
     , MonadUnliftIO m
-    , HasProtocolMagic
     )
     => BlockHeader -> m ClassifyHeaderRes
 -- Genesis headers seem useless, we can create them by ourselves.
@@ -168,8 +166,6 @@ classifyHeaders ::
        ( MonadDBRead m
        , MonadSlots ctx m
        , WithLogger m
-       , HasProtocolConstants
-       , HasProtocolMagic
        )
     => Bool -- recovery in progress?
     -> NewestFirst NE BlockHeader
@@ -309,7 +305,7 @@ getHeadersFromManyTo mLimit checkpoints startM = runExceptT $ do
 -- it returns not more than 'blkSecurityParam' blocks distributed
 -- exponentially base 2 relatively to the depth in the blockchain.
 getHeadersOlderExp
-    :: ( MonadDBRead m, HasProtocolConstants, HasGenesisHash )
+    :: MonadDBRead m
     => Maybe HeaderHash -> m (OldestFirst NE HeaderHash)
 getHeadersOlderExp upto = do
     tip <- GS.getTip
