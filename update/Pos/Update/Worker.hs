@@ -12,7 +12,7 @@ import           Formatting (build, sformat, (%))
 import           Serokell.Util.Text (listJsonIndent)
 import           System.Wlog (logDebug, logInfo)
 
-import           Pos.Core (SoftwareVersion (..), HasProtocolConstants, HasGenesisBlockVersionData)
+import           Pos.Core (SoftwareVersion (..))
 import           Pos.Core.Update (UpdateProposal (..))
 import           Pos.Diffusion.Types (Diffusion)
 import           Pos.Recovery.Info (recoveryCommGuard)
@@ -32,8 +32,6 @@ import           Pos.Util.Util (lensOf)
 usWorkers
     :: forall ctx m.
        ( UpdateMode ctx m
-       , HasProtocolConstants
-       , HasGenesisBlockVersionData
        )
     => [Diffusion m -> m ()]
 usWorkers = [processNewSlotWorker, checkForUpdateWorker]
