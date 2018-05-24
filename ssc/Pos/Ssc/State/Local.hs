@@ -24,7 +24,6 @@ sscResetLocal ::
        ( MonadDBRead m
        , MonadSscMem ctx m
        , MonadSlots ctx m
-       , HasProtocolConstants
        )
     => m ()
 sscResetLocal = do

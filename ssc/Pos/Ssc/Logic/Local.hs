@@ -29,7 +29,7 @@ import           System.Wlog (WithLogger, launchNamedPureLog, logWarning)
 
 import           Pos.Binary.Class (biSize)
 import           Pos.Binary.Ssc ()
-import           Pos.Core (BlockVersionData (..), EpochIndex, HasGenesisBlockVersionData,
+import           Pos.Core (BlockVersionData (..), EpochIndex,
                            HasGenesisData, HasProtocolConstants, HasProtocolMagic, SlotId (..),
                            StakeholderId, VssCertificate, epochIndexL,
                            mkVssCertificatesMapSingleton)
@@ -98,10 +98,6 @@ sscNormalize
        , WithLogger m
        , MonadIO m
        , Rand.MonadRandom m
-       , HasProtocolConstants
-       , HasGenesisData
-       , HasProtocolMagic
-       , HasGenesisBlockVersionData
        )
     => m ()
 sscNormalize = do
@@ -192,44 +188,32 @@ type SscDataProcessingMode ctx m =
 
 -- | Process 'SignedCommitment' received from network, checking it against
 -- current state (global + local) and adding to local state if it's valid.
-sscProcessCommitment
-    :: forall ctx m.
-       (SscDataProcessingMode ctx m, HasProtocolConstants, HasProtocolMagic, HasGenesisData, HasGenesisBlockVersionData)
-    => SignedCommitment -> m (Either SscVerifyError ())
+sscProcessCommitment :: SscDataProcessingMode ctx m => SignedCommitment -> m (Either SscVerifyError ())
 sscProcessCommitment comm =
     sscProcessData CommitmentMsg $
     CommitmentsPayload (mkCommitmentsMap [comm]) mempty
 
 -- | Process 'Opening' received from network, checking it against
 -- current state (global + local) and adding to local state if it's valid.
-sscProcessOpening
-    :: (SscDataProcessingMode ctx m, HasProtocolConstants, HasProtocolMagic, HasGenesisData, HasGenesisBlockVersionData)
-    => StakeholderId -> Opening -> m (Either SscVerifyError ())
+sscProcessOpening :: SscDataProcessingMode ctx m => StakeholderId -> Opening -> m (Either SscVerifyError ())
 sscProcessOpening id opening =
     sscProcessData OpeningMsg $
     OpeningsPayload (HM.fromList [(id, opening)]) mempty
 
 -- | Process 'InnerSharesMap' received from network, checking it against
 -- current state (global + local) and adding to local state if it's valid.
-sscProcessShares
-    :: (SscDataProcessingMode ctx m, HasGenesisBlockVersionData, HasGenesisData, HasProtocolMagic, HasProtocolConstants)
-    => StakeholderId -> InnerSharesMap -> m (Either SscVerifyError ())
+sscProcessShares :: SscDataProcessingMode ctx m => StakeholderId -> InnerSharesMap -> m (Either SscVerifyError ())
 sscProcessShares id shares =
     sscProcessData SharesMsg $ SharesPayload (HM.fromList [(id, shares)]) mempty
 
 -- | Process 'VssCertificate' received from network, checking it against
 -- current state (global + local) and adding to local state if it's valid.
-sscProcessCertificate
-    :: (SscDataProcessingMode ctx m, HasGenesisBlockVersionData, HasGenesisData, HasProtocolMagic, HasProtocolConstants)
-    => VssCertificate -> m (Either SscVerifyError ())
+sscProcessCertificate :: SscDataProcessingMode ctx m => VssCertificate -> m (Either SscVerifyError ())
 sscProcessCertificate cert =
     sscProcessData VssCertificateMsg $
     CertificatesPayload (mkVssCertificatesMapSingleton cert)
 
-sscProcessData
-    :: forall ctx m.
-       (SscDataProcessingMode ctx m, HasProtocolConstants, HasProtocolMagic, HasGenesisData, HasGenesisBlockVersionData)
-    => SscTag -> SscPayload -> m (Either SscVerifyError ())
+sscProcessData :: SscDataProcessingMode ctx m => SscTag -> SscPayload -> m (Either SscVerifyError ())
 sscProcessData tag payload =
     runExceptT $ do
         getCurrentSlot >>= checkSlot

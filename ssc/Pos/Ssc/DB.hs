@@ -13,7 +13,7 @@ import qualified Data.Text.Buildable
 import qualified Database.RocksDB as Rocks
 import           Formatting (bprint, build, (%))
 
-import           Pos.Core (genesisVssCerts, HasGenesisData, HasCoreConfiguration)
+import           Pos.Core (genesisVssCerts, HasCoreConfiguration)
 import           Pos.DB (MonadDB, MonadDBRead, RocksBatchOp (..))
 import           Pos.DB.Error (DBError (DBMalformed))
 import           Pos.DB.Functions (dbSerializeValue)
@@ -31,7 +31,7 @@ getSscGlobalState =
 sscGlobalStateToBatch :: SscGlobalState -> SscOp
 sscGlobalStateToBatch = PutGlobalState
 
-initSscDB :: (MonadDB m, HasGenesisData) => m ()
+initSscDB :: (MonadDB m) => m ()
 initSscDB = gsPutBi sscKey (def {_sgsVssCertificates = vcd})
   where
     vcd = VCD.fromList . toList $ genesisVssCerts

@@ -14,7 +14,6 @@ import           System.Wlog (WithLogger)
 import           Pos.DB (MonadDBRead)
 import           Pos.Slotting.Class (MonadSlots)
 import           Pos.Ssc.Types (SscState (..))
-import           Pos.Core (HasProtocolConstants)
 
 -- Reexports
 import           Pos.Ssc.State.Global
@@ -25,7 +24,6 @@ mkSscState
        ( WithLogger m
        , MonadDBRead m
        , MonadSlots ctx m
-       , HasProtocolConstants
        )
     => m SscState
 mkSscState = do

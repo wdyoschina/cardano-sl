@@ -23,14 +23,12 @@ import           Pos.Arbitrary.Ssc ()
 import           Pos.Binary.Class (AsBinary, asBinary, fromBinary)
 import           Pos.Binary.Infra ()
 import           Pos.Binary.Ssc ()
-import           Pos.Core (EpochIndex, HasGenesisBlockVersionData, HasGenesisData,
-                           HasProtocolConstants, HasProtocolMagic, SlotId (..), StakeholderId,
+import           Pos.Core (EpochIndex, SlotId (..), StakeholderId,
                            Timestamp (..), VssCertificate (..), VssCertificatesMap (..),
                            blkSecurityParam, bvdMpcThd, getOurSecretKey, getOurStakeholderId,
                            getSlotIndex, lookupVss, memberVss, mkLocalSlotIndex, mkVssCertificate,
                            slotSecurityParam, vssMaxTTL)
-import           Pos.Core.Ssc (Commitment (..), InnerSharesMap, Opening, SignedCommitment,
-                               getCommitmentsMap)
+import           Pos.Core.Ssc (InnerSharesMap, Opening, SignedCommitment, getCommitmentsMap)
 import           Pos.Crypto (SecretKey, VssKeyPair, VssPublicKey, randomNumber, runSecureRandom)
 import           Pos.Crypto.Configuration (protocolMagic)
 import           Pos.Crypto.SecretSharing (toVssPublicKey)
@@ -63,16 +61,12 @@ import           Pos.Util.Util (getKeys, leftToPanic)
 
 sscWorkers
   :: ( SscMode ctx m
-     , HasGenesisBlockVersionData
-     , HasGenesisData
-     , HasProtocolConstants
-     , HasProtocolMagic
      , HasMisbehaviorMetrics ctx
      )
   => [Diffusion m -> m ()]
 sscWorkers = [onNewSlotSsc, checkForIgnoredCommitmentsWorker]
 
-shouldParticipate :: (SscMode ctx m, HasGenesisBlockVersionData) => EpochIndex -> m Bool
+shouldParticipate :: SscMode ctx m => EpochIndex -> m Bool
 shouldParticipate epoch = do
     richmen <- getSscRichmen "shouldParticipate" epoch
     participationEnabled <- view sscContext >>=
@@ -87,10 +81,6 @@ shouldParticipate epoch = do
 -- #checkNSendOurCert
 onNewSlotSsc
     :: ( SscMode ctx m
-       , HasGenesisBlockVersionData
-       , HasGenesisData
-       , HasProtocolConstants
-       , HasProtocolMagic
        )
     => Diffusion m
     -> m ()
@@ -110,10 +100,6 @@ onNewSlotSsc = \diffusion -> onNewSlot defaultOnNewSlotParams $ \slotId ->
 checkNSendOurCert
     :: forall ctx m.
        ( SscMode ctx m
-       , HasProtocolConstants
-       , HasProtocolMagic
-       , HasGenesisBlockVersionData
-       , HasGenesisData
        )
     => (VssCertificate -> m ())
     -> m ()
@@ -170,10 +156,6 @@ getOurVssKeyPair = views sscContext scVssKeyPair
 -- Commitments-related part of new slot processing
 onNewSlotCommitment
     :: ( SscMode ctx m
-       , HasGenesisBlockVersionData
-       , HasGenesisData
-       , HasProtocolConstants
-       , HasProtocolMagic
        )
     => SlotId
     -> (SignedCommitment -> m ())
@@ -213,10 +195,6 @@ onNewSlotCommitment slotId@SlotId {..} sendCommitment
 -- Openings-related part of new slot processing
 onNewSlotOpening
     :: ( SscMode ctx m
-       , HasGenesisBlockVersionData
-       , HasGenesisData
-       , HasProtocolConstants
-       , HasProtocolMagic
        )
     => SscOpeningParams
     -> SlotId
@@ -251,10 +229,6 @@ onNewSlotOpening params SlotId {..} sendOpening
 -- Shares-related part of new slot processing
 onNewSlotShares
     :: ( SscMode ctx m
-       , HasProtocolConstants
-       , HasProtocolMagic
-       , HasGenesisData
-       , HasGenesisBlockVersionData
        )
     => SscSharesParams
     -> SlotId
@@ -296,10 +270,8 @@ sscProcessOurMessage action =
         logWarningS $
         sformat ("We have rejected our message, reason: "%build) er
 
-sendOurData ::
-    ( SscMode ctx m
-    , HasProtocolConstants
-    )
+sendOurData
+    :: SscMode ctx m
     => (contents -> m ())
     -> SscTag
     -> contents
@@ -324,10 +296,6 @@ sendOurData sendIt msgTag dt epoch slMultiplier = do
 generateAndSetNewSecret
     :: forall ctx m.
        ( SscMode ctx m
-       , HasProtocolConstants
-       , HasProtocolMagic
-       , HasGenesisData
-       , HasGenesisBlockVersionData
        )
     => SecretKey
     -> SlotId -- ^ Current slot
@@ -389,9 +357,7 @@ randomTimeInInterval interval =
     n = toInteger @Microsecond interval
 
 waitUntilSend
-    :: ( SscMode ctx m
-       , HasProtocolConstants
-       )
+    :: SscMode ctx m
     => SscTag -> EpochIndex -> Word16 -> m ()
 waitUntilSend msgTag epoch slMultiplier = do
     let slot =
@@ -422,8 +388,6 @@ waitUntilSend msgTag epoch slMultiplier = do
 checkForIgnoredCommitmentsWorker
     :: forall ctx m.
        ( SscMode ctx m
-       , HasProtocolConstants
-       , HasGenesisBlockVersionData
        , HasMisbehaviorMetrics ctx
        )
     => Diffusion m
@@ -444,8 +408,6 @@ checkForIgnoredCommitmentsWorker = \_ -> do
 checkForIgnoredCommitmentsWorkerImpl
     :: forall ctx m.
        ( SscMode ctx m
-       , HasProtocolConstants
-       , HasGenesisBlockVersionData
        , HasMisbehaviorMetrics ctx
        )
     => TVar Word -> SlotId -> m ()
