@@ -26,7 +26,7 @@ import           Mockable (CurrentTime, Mockable, currentTime)
 import           UnliftIO (MonadUnliftIO)
 
 import           Pos.Binary.Class (biSize)
-import           Pos.Core (HasGenesisBlockVersionData, HasProtocolMagic, ProxySKHeavy, addressHash,
+import           Pos.Core (ProxySKHeavy, addressHash,
                            bvdMaxBlockSize, epochIndexL, headerHash)
 import           Pos.Crypto (ProxySecretKey (..), PublicKey)
 import           Pos.DB (MonadDBRead, MonadGState)
@@ -123,8 +123,6 @@ processProxySKHeavy
     :: forall ctx m.
        ( ProcessHeavyConstraint ctx m
        , HasLens' ctx StateLock
-       , HasGenesisBlockVersionData
-       , HasProtocolMagic
        , MonadMask m
        )
     => ProxySKHeavy -> m PskHeavyVerdict
@@ -136,7 +134,7 @@ processProxySKHeavy psk =
 -- synchronization. Should be called __only__ if you are sure that
 -- 'StateLock' is taken already.
 processProxySKHeavyInternal ::
-       forall ctx m. (ProcessHeavyConstraint ctx m, HasGenesisBlockVersionData, HasProtocolMagic)
+       forall ctx m. (ProcessHeavyConstraint ctx m)
     => ProxySKHeavy
     -> m PskHeavyVerdict
 processProxySKHeavyInternal psk = do

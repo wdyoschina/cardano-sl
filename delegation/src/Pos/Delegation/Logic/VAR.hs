@@ -26,8 +26,8 @@ import           Serokell.Util (listJson, mapJson)
 import           System.Wlog (WithLogger, logDebug)
 import           UnliftIO (MonadUnliftIO)
 
-import           Pos.Core (ComponentBlock (..), EpochIndex (..), HasGenesisBlockVersionData,
-                           HasProtocolMagic, StakeholderId, addressHash, epochIndexL, gbHeader,
+import           Pos.Core (ComponentBlock (..), EpochIndex (..),
+                           StakeholderId, addressHash, epochIndexL, gbHeader,
                            headerHash, prevBlockL, siEpoch)
 import           Pos.Core.Block (Block, mainBlockDlgPayload, mainBlockSlot)
 import           Pos.Crypto (ProxySecretKey (..), shortHashF)
@@ -293,7 +293,6 @@ getNoLongerRichmen ::
        , MonadIO m
        , MonadReader ctx m
        , HasLrcContext ctx
-       , HasGenesisBlockVersionData
        )
     => EpochIndex
     -> m (HashSet StakeholderId)
@@ -320,8 +319,6 @@ dlgVerifyBlocks ::
        , MonadUnliftIO m
        , MonadReader ctx m
        , HasLrcContext ctx
-       , HasProtocolMagic
-       , HasGenesisBlockVersionData
        )
     => OldestFirst NE Block
     -> ExceptT Text m (OldestFirst NE DlgUndo)
@@ -500,8 +497,6 @@ dlgNormalizeOnRollback ::
        , DB.MonadGState m
        , HasLrcContext ctx
        , Mockable CurrentTime m
-       , HasProtocolMagic
-       , HasGenesisBlockVersionData
        )
     => m ()
 dlgNormalizeOnRollback = do
