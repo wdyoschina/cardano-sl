@@ -1,21 +1,25 @@
-{-# OPTIONS_GHC -fno-warn-dodgy-imports #-}
 module Test.Pos.Core.CoreGenerators where
 
 import           Universum
 
+import           Cardano.Crypto.Wallet (xsignature)
 import           Data.Maybe (fromJust)
+import           Data.Text
 import           Hedgehog (Gen)
 import           Pos.Binary.Core()
-import           Pos.Core.Common (Address (..), Coin (..), IsBootstrapEraAddr (..)
+import           Pos.Core.Common ( Address (..), Coin (..), IsBootstrapEraAddr (..)
                                  , makePubKeyAddress, Script (..))
-import           Pos.Core.Txp (Tx (..), TxIn (..), TxInWitness (..)
-                              , TxOut (..), TxSig (..) , TxSigData (..))
+import           Pos.Core.Txp ( Tx (..), TxIn (..), TxInWitness (..)
+                              , TxOut (..), TxSig , TxSigData (..))
 import           Pos.Crypto.Configuration
 import           Pos.Crypto.Hashing (unsafeHash)
-import           Pos.Crypto.Signing (createKeypairFromSeed, PublicKey(..), redeemDeterministicKeyGen
-                                    , redeemPkBuild, RedeemPublicKey(..), RedeemSecretKey(..)
-                                    , redeemSign, RedeemSignature(..), sign, SecretKey(..), SignTag(..))
+import           Pos.Crypto.Signing ( createKeypairFromSeed, parseFullPublicKey, PublicKey(..)
+                                    , redeemDeterministicKeyGen, redeemPkBuild, RedeemPublicKey(..)
+                                    , RedeemSecretKey(..), redeemSign, RedeemSignature(..), sign
+                                    , SecretKey(..), Signature (..), SignTag(..))
 import           Pos.Data.Attributes (mkAttributes)
+import           Prelude
+--import qualified Test.Pos.Util.Base16 as B16
 
 import qualified Hedgehog.Gen as Gen
 import qualified Hedgehog.Range as Range
@@ -146,4 +150,33 @@ genUnkWit = do
     return $ UnknownWitnessType word bs
 
 ------------------------------------------------------------------------
+
+-- Golden test data
+
+
+seedBS :: ByteString
+seedBS = "nvpbkjoxpmemkgicmqxdixdwrsbhwdtqxhtzipzfwkjzzkwifcgszbqmfjyrxrrg"
+
+-- | `XSignature` constructors are not exported from cardano-crypto.
+-- Therefore `TxSig` must be constructed with `xsignature`.
+txSig :: TxSig
+txSig = case xsignature seedBS of
+            Right xsig -> Signature xsig
+            Left err -> Prelude.error $ "txSig error:" ++ err
+
+
+-- | `seedPubK` generated with `formatFullPublicKey` and `genPubKey`.
+
+seedPubK :: Text
+seedPubK = "eFZDwMJmAX3KKaRV/zLx2PabIE3un79kQ36oZuKFUMjA6wW5zsmOmvRwWoL8gMfw\
+           \+xNz1bSHAZvRt47V+iTb7g=="
+
+
+pubKey :: PublicKey
+pubKey = case (parseFullPublicKey seedPubK) of
+            Right pk -> pk
+            Left err -> Universum.error (toText ("Seed public key failed to parse: " :: Text) `Data.Text.append` err)
+
+pkWitness :: TxInWitness
+pkWitness = PkWitness pubKey txSig
 
