@@ -28,7 +28,7 @@ module JsonLog.JsonLogT
     , jsonLogDefault
     ) where
 
-import           Control.Concurrent.MVar (MVar, withMVar)
+import           Control.Concurrent.MVar (MVar)
 import           Control.Monad.Base (MonadBase)
 import           Control.Monad.Fix (MonadFix)
 import           Control.Monad.IO.Class (MonadIO (..))
@@ -149,11 +149,16 @@ jsonLogDefault jlc x =
                 `catchAny` \e -> do
                     logWarning $ sformat ("error in deciding whether to json log: "%shown) e
                     return False
-            logWarning "Started JSONlogging"
-            when b $ liftIO (withMVar v $ \h -> (hPut h (encode event) >> hFlush h))
+            logWarning "Waiting the lock for JSON logging"
+            when b $
+                ( do
+                    h <- takeMVar v
+                    logWarning "Granted the lock for JSON logging"
+                    liftIO $ hPut h (encode event)
+                    liftIO $ hFlush h
+                    logWarning "Ended JSONlogging" )
                 `catchAny` \e ->
                     logWarning $ sformat ("can't write json log: "%shown) e
-            logWarning "Ended JSONlogging"
 
 instance ( MonadIO m
          , WithLogger m
