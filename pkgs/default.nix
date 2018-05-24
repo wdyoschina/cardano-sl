@@ -7220,10 +7220,10 @@ inherit (pkgs) mesa;};
            license = stdenv.lib.licenses.mit;
          }) {};
       "cardano-sl-crypto" = callPackage
-        ({ mkDerivation, aeson, base, binary, bytestring, cardano-crypto
-         , cardano-sl-binary, cardano-sl-util, cborg, cpphs, cryptonite
-         , cryptonite-openssl, data-default, ed25519, formatting, hashable
-         , hspec, lens, memory, mtl, pvss, QuickCheck, reflection
+        ({ mkDerivation, aeson, base, base58-bytestring, binary, bytestring
+         , cardano-crypto, cardano-sl-binary, cardano-sl-util, cborg, cpphs
+         , cryptonite, cryptonite-openssl, data-default, ed25519, formatting
+         , hashable, hspec, lens, memory, mtl, pvss, QuickCheck, reflection
          , safe-exceptions, scrypt, serokell-util, stdenv, text, text-format
          , universum, unordered-containers
          }:
@@ -7232,11 +7232,11 @@ inherit (pkgs) mesa;};
            version = "1.1.1";
            src = ./../crypto;
            libraryHaskellDepends = [
-             aeson base binary bytestring cardano-crypto cardano-sl-binary
-             cardano-sl-util cborg cryptonite cryptonite-openssl data-default
-             ed25519 formatting hashable lens memory mtl pvss reflection
-             safe-exceptions scrypt serokell-util text text-format universum
-             unordered-containers
+             aeson base base58-bytestring binary bytestring cardano-crypto
+             cardano-sl-binary cardano-sl-util cborg cryptonite
+             cryptonite-openssl data-default ed25519 formatting hashable lens
+             memory mtl pvss reflection safe-exceptions scrypt serokell-util
+             text text-format universum unordered-containers
            ];
            libraryToolDepends = [ cpphs ];
            testHaskellDepends = [
