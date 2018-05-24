@@ -6,7 +6,6 @@ module Pos.Lrc.DB.Lrc
 
 import           Universum
 
-import           Pos.Core (HasGenesisBlockVersionData, HasGenesisData, HasProtocolConstants)
 import           Pos.DB.Class (MonadDB)
 import           Pos.DB.Error (DBError (..))
 import           Pos.Lrc.DB.Common (prepareLrcCommon)
@@ -18,13 +17,7 @@ import           Pos.Lrc.DB.Seed (prepareLrcSeed)
 import           Pos.Util (maybeThrow)
 
 -- | Put missing initial data into LRC DB.
-prepareLrcDB
-    :: ( MonadDB m
-       , HasGenesisBlockVersionData
-       , HasProtocolConstants
-       , HasGenesisData
-       )
-    => m ()
+prepareLrcDB :: MonadDB m => m ()
 prepareLrcDB = do
     prepareLrcLeaders
     prepareLrcRichmen
