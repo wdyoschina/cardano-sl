@@ -118,7 +118,7 @@ in pkgs.writeScript "demo-cluster" ''
   SYNCED=0
   while [[ $SYNCED != 100 ]]
   do
-    PERC=$(curl --silent --cacert ${stateDir}/tls-files/ca.crt --cert ${stateDir}/tls-files/client.pem https://localhost:8090/api/v1/node-info | jq .data.syncProgress.quantity)
+    PERC=$(curl --silent --cacert ${stateDir}/tls/client/ca.crt --cert ${stateDir}/tls/client/client.pem https://localhost:8090/api/v1/node-info | jq .data.syncProgress.quantity)
     if [[ $PERC == "100" ]]
     then
       echo Blockchain Synced: $PERC%
@@ -143,8 +143,8 @@ in pkgs.writeScript "demo-cluster" ''
   do
       echo "Importing key$i.sk ..."
       curl https://localhost:8090/api/wallets/keys \
-      --cacert ${stateDir}/tls-files/ca.crt \
-      --cert ${stateDir}/tls-files/client.pem \
+      --cacert ${stateDir}/tls/client/ca.crt \
+      --cert ${stateDir}/tls/client/client.pem \
       -X POST \
       -H 'cache-control: no-cache' \
       -H 'content-type: application/json' \
