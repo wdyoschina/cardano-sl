@@ -41,6 +41,10 @@ type API = Tags '["Wallets"] :>
                    :> Summary "Creates a new or restores an existing external wallet (mobile client or hardware wallet)."
                    :> ReqBody '[ValidJSON] (New ExternalWallet)
                    :> PostCreated '[ValidJSON] (WalletResponse Wallet)
+    :<|> "extenal-wallets"
+                   :> CaptureWalletId
+                   :> Summary "Deletes the given external Wallet and all its accounts."
+                   :> DeleteNoContent '[ValidJSON] NoContent
     :<|> "external-wallets"
                    :> CaptureWalletId
                    :> "address-path"

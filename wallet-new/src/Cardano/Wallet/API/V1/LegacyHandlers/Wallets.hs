@@ -11,8 +11,8 @@ import           UnliftIO (MonadUnliftIO)
 
 import qualified Pos.Wallet.Web.ClientTypes.Types as V0
 import qualified Pos.Wallet.Web.Methods as V0
-import qualified Pos.Wallet.Web.State as V0 (WalletSnapshot, askWalletSnapshot, askWalletDB)
-import           Pos.Wallet.Web.State (setWalletSyncTip, removeHistoryCache)
+import           Pos.Wallet.Web.State (removeHistoryCache, setWalletSyncTip)
+import qualified Pos.Wallet.Web.State as V0 (WalletSnapshot, askWalletDB, askWalletSnapshot)
 import qualified Pos.Wallet.Web.State.Storage as V0
 
 import           Cardano.Crypto.Wallet (xpub)
@@ -23,11 +23,11 @@ import           Cardano.Wallet.API.V1.Migration
 import           Cardano.Wallet.API.V1.Types as V1
 import qualified Cardano.Wallet.API.V1.Wallets as Wallets
 import qualified Data.IxSet.Typed as IxSet
+import           Pos.Client.KeyStorage (addPublicKey)
 import qualified Pos.Core as Core
 import           Pos.Crypto (PublicKey (..))
-import           Pos.Update.Configuration ()
-import           Pos.Client.KeyStorage (addPublicKey)
 import           Pos.StateLock (Priority (..), withStateLockNoMetrics)
+import           Pos.Update.Configuration ()
 
 import           Pos.Util (HasLens (..))
 import           Pos.Util.Servant (encodeCType)
@@ -36,9 +36,9 @@ import qualified Pos.Wallet.Web.Error.Types as V0
 import           Pos.Wallet.Web.Methods.Logic (MonadWalletLogic, MonadWalletLogicRead)
 import           Pos.Wallet.Web.Tracking.Types (SyncQueue)
 
-import           Servant
-import           Data.Maybe (fromJust)
 import           Data.ByteString.Base58 (bitcoinAlphabet, decodeBase58)
+import           Data.Maybe (fromJust)
+import           Servant
 import           Test.QuickCheck (arbitrary, generate)
 
 -- | All the @Servant@ handlers for wallet-specific operations.
@@ -53,6 +53,7 @@ handlers = newWallet
     :<|> getWallet
     :<|> updateWallet
     :<|> newExternalWallet
+    :<|> deleteExternalWallet
     :<|> newAddressPath
 
 
@@ -279,6 +280,17 @@ createNewExternalWallet walletMeta encodedExtPubKey = do
 
     makeWalletIdFrom publicKey =
         return $ encodeCType . Core.makePubKeyAddressBoot $ publicKey
+
+
+-- | On disk, once imported or created, there's so far not much difference
+-- between a wallet and an external wallet.
+deleteExternalWallet
+    :: (V0.MonadWalletLogic ctx m)
+    => WalletId
+    -> m NoContent
+deleteExternalWallet =
+    deleteWallet
+
 
 -- | Creates a new BIP44 derivation path for an external wallet.
 newAddressPath

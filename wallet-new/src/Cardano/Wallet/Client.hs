@@ -89,6 +89,8 @@ data WalletClient m
          :: WalletId -> Update Wallet -> Resp m Wallet
     , postExternalWallet
          :: New ExternalWallet -> Resp m Wallet
+    , deleteExternalWallet
+         :: WalletId -> m (Either ClientError ())
     , postAddressPath
         :: WalletId -> Resp m AddressPath
     -- account endpoints
@@ -209,6 +211,8 @@ hoistClient phi wc = WalletClient
          \x -> phi . updateWallet wc x
     , postExternalWallet =
          phi . postExternalWallet wc
+    , deleteExternalWallet =
+         phi . deleteExternalWallet wc
     , postAddressPath =
          phi . postAddressPath wc
     , deleteAccount =
