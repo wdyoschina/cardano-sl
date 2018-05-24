@@ -1,23 +1,25 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Test.Pos.Binary.Tripping
-       ( runTests
+       ( goldenTestBi
+       , runTests
        , trippingBiBuildable
        , trippingBiShow
        ) where
 
 import           Universum
 
+import qualified Data.ByteString.Base16 as B16
 import qualified Data.ByteString.Lazy.Char8 as BS
 import qualified Data.Text.Lazy as LazyText
 import           Data.Text.Buildable (Buildable (..))
 import           Data.Text.Internal.Builder (fromText, toLazyText)
 
-import           Hedgehog (MonadTest)
+import           Hedgehog (MonadTest,( ===))
 import           Hedgehog.Internal.Show (valueDiff)
 import           Hedgehog.Internal.Property (Diff (..), failWith)
 import qualified Hedgehog as H
 
-import           Pos.Binary.Class (Bi (..), serialize, decodeFull)
+import           Pos.Binary.Class (Bi (..), serialize, serialize', decodeFull)
 
 import qualified Prelude
 
@@ -28,6 +30,14 @@ runTests tests = do
     result <- and <$> sequence tests
     unless result
         exitFailure
+
+-- | Round trip
+goldenTestBi :: (Bi a, Eq a, Show a) => a -> ByteString -> m ()
+goldenTestBi x bs = do
+    let target = fst $ B16.decode bs
+    H.withTests 1 . H.property $ do
+        serialize' a === target
+        -- decodeFull target === a
 
 -- | Round trip test a value (any instance of both the 'Bi' and 'Show' classes)
 -- by serializing it to a ByteString and back again and

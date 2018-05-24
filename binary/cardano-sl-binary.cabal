@@ -97,6 +97,7 @@ test-suite test
   type:                exitcode-stdio-1.0
   build-depends:       QuickCheck
                      , base
+                     , base16-bytestring
                      , bytestring
                      , canonical-json
                      , cardano-sl-binary
