@@ -68,8 +68,7 @@ verifyAndApplyBlocks' blunds = do
 
 -- | Execute a single block event.
 runBlockEvent ::
-       ( HasConfiguration
-       , BlockLrcMode BlockTestContext m
+       ( BlockLrcMode BlockTestContext m
        , MonadTxpLocal m
        )
     => BlockEvent
@@ -151,7 +150,6 @@ data BlockScenarioResult
 runBlockScenario ::
        ( MonadPureDB ctx m
        , ctx ~ BlockTestContext
-       , HasConfiguration
        , BlockLrcMode BlockTestContext m
        , MonadTxpLocal m
        )
