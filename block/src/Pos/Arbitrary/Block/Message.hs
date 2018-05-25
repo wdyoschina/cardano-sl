@@ -9,7 +9,6 @@ import           Test.QuickCheck.Arbitrary.Generic (genericArbitrary, genericShr
 
 import           Pos.Arbitrary.Block ()
 import           Pos.Arbitrary.Ssc ()
-import           Pos.Arbitrary.Txp ()
 import           Pos.Arbitrary.Update ()
 import qualified Pos.Block.Network.Types as T
 import           Pos.Core (HasGenesisHash, HasProtocolConstants, HasProtocolMagic)
