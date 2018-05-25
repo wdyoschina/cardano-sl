@@ -194,8 +194,7 @@ legacyWalletBackend WalletBackendParams {..} ntpStatus = pure $ \diffusion -> do
 -- | A 'Plugin' to start the wallet REST server
 --
 -- TODO: no web socket support in the new wallet for now
-walletBackend :: (HasConfigurations, HasCompileInfo)
-              => NewWalletBackendParams
+walletBackend :: NewWalletBackendParams
               -> PassiveWalletLayer Production
               -> Plugin Kernel.WalletMode
 walletBackend (NewWalletBackendParams WalletBackendParams{..}) passive = pure $ \diffusion -> do
